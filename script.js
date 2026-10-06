@@ -1068,7 +1068,6 @@ updateDisplay();
 
 // Fine-pointer ornament only; native text selection and touch keep their cursor.
 const cursorCapability = matchMedia('(hover: hover) and (pointer: fine)');
-const cursorPrimaryTouch = matchMedia('(hover: none) and (pointer: coarse)');
 const cursorReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const cursorRing = document.createElement('div');
 cursorRing.className = 'cursor-ring';
@@ -1076,7 +1075,7 @@ cursorRing.setAttribute('aria-hidden', 'true');
 document.body.appendChild(cursorRing);
 let cursorFrame = 0;
 let cursorPoint = null;
-const cursorGhosts = Array.from({ length:4 }, () => {
+const cursorGhosts = Array.from({ length:6 }, () => {
     const dot = document.createElement('div');
     dot.className = 'cursor-ghost';
     dot.setAttribute('aria-hidden', 'true');
@@ -1097,7 +1096,7 @@ function clearCursorEffects() {
     lastGhostTime = -Infinity;
 }
 function canUseCursor(event) {
-    return cursorCapability.matches && !cursorPrimaryTouch.matches && event.pointerType === 'mouse'
+    return cursorCapability.matches && event.pointerType === 'mouse'
         && !event.target.closest('input,textarea,[contenteditable]');
 }
 function disableCursor() {
@@ -1116,8 +1115,8 @@ document.addEventListener('pointermove', event => {
     cursorRing.classList.toggle('over-dial', !!event.target.closest('.knob'));
     cursorPoint = { x:event.clientX, y:event.clientY };
     const now = performance.now();
-    if (!cursorReducedMotion.matches && now - lastGhostTime >= 45 && lastGhostPoint
-        && Math.hypot(cursorPoint.x - lastGhostPoint.x, cursorPoint.y - lastGhostPoint.y) >= 5) {
+    if (!cursorReducedMotion.matches && now - lastGhostTime >= 32 && lastGhostPoint
+        && Math.hypot(cursorPoint.x - lastGhostPoint.x, cursorPoint.y - lastGhostPoint.y) >= 4) {
         const dot = cursorGhosts[ghostIndex++ % cursorGhosts.length];
         dot.style.left = `${lastGhostPoint.x}px`;
         dot.style.top = `${lastGhostPoint.y}px`;
@@ -1150,5 +1149,4 @@ document.addEventListener('pointercancel', disableCursor);
 document.addEventListener('pointerout', event => { if (!event.relatedTarget) disableCursor(); });
 window.addEventListener('blur', disableCursor);
 cursorCapability.addEventListener('change', disableCursor);
-cursorPrimaryTouch.addEventListener('change', disableCursor);
 cursorReducedMotion.addEventListener('change', clearCursorEffects);

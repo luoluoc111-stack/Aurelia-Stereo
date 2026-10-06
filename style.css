@@ -1276,33 +1276,38 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
 
 
 
-/* Fine reticle and a bounded four-mark, 180ms path trace. */
+/* Fine reticle with a restrained, clearly visible motion trace. */
 .cursor-ring,.cursor-ring.over-control {
-    width:22px; height:22px; border:0; border-radius:0; color:#b9ab8c;
-    background:linear-gradient(currentColor,currentColor) left center / 5px 1px no-repeat,
-        linear-gradient(currentColor,currentColor) right center / 5px 1px no-repeat,
-        linear-gradient(currentColor,currentColor) center top / 1px 5px no-repeat,
-        linear-gradient(currentColor,currentColor) center bottom / 1px 5px no-repeat;
+    width:26px; height:26px; border:0; border-radius:0; color:#e0cfaa;
+    background:linear-gradient(currentColor,currentColor) left center / 6px 1px no-repeat,
+        linear-gradient(currentColor,currentColor) right center / 6px 1px no-repeat,
+        linear-gradient(currentColor,currentColor) center top / 1px 6px no-repeat,
+        linear-gradient(currentColor,currentColor) center bottom / 1px 6px no-repeat;
+    filter:drop-shadow(0 0 4px rgba(224,207,170,.32));
 }
 .cursor-ring::after,.cursor-ring.over-control::after {
-    left:10px; top:7px; width:1px; height:8px; border-radius:1px;
-    background:#ddd3ba; transform:rotate(20deg);
+    left:12px; top:8px; width:1px; height:10px; border-radius:1px;
+    background:#f0dfb9; transform:rotate(20deg);
 }
-.cursor-ring.over-control { color:#d2c09a; scale:1.12; }
+.cursor-ring.over-control { color:#f0ddb0; scale:1.14; }
 .cursor-ring.over-dial { rotate:45deg; }
 .cursor-ring.pressed { scale:.88; }
 .cursor-ghost,.cursor-click {
     position:fixed; left:0; top:0; pointer-events:none!important; z-index:1999;
-    width:4px; height:4px; border:1px solid #b6a484; border-radius:50%;
+    width:5px; height:5px; border:1px solid #d8c59b; border-radius:50%;
     opacity:0; transform:translate(-50%,-50%);
+    filter:drop-shadow(0 0 3px rgba(216,197,155,.24));
 }
-.cursor-ghost.tracing { animation:cursor-ghost-fade 180ms linear both; }
-.cursor-click { width:12px; height:12px; }
-.cursor-click.radiating { animation:cursor-click-expand 210ms ease-out both; }
-@keyframes cursor-ghost-fade { from { opacity:.19; } to { opacity:0; } }
+.cursor-ghost.tracing { animation:cursor-ghost-fade 260ms ease-out both; }
+.cursor-click { width:14px; height:14px; border-color:#e5d0a3; }
+.cursor-click.radiating { animation:cursor-click-expand 230ms ease-out both; }
+@keyframes cursor-ghost-fade {
+    from { opacity:.46; transform:translate(-50%,-50%) scale(1); }
+    to { opacity:0; transform:translate(-50%,-50%) scale(.55); }
+}
 @keyframes cursor-click-expand {
-    from { opacity:.38; transform:translate(-50%,-50%) scale(.8); }
-    to { opacity:0; transform:translate(-50%,-50%) scale(2.3); }
+    from { opacity:.48; transform:translate(-50%,-50%) scale(.8); }
+    to { opacity:0; transform:translate(-50%,-50%) scale(2.45); }
 }
 @media (hover:none) and (pointer:coarse) {
     .cursor-ring,.cursor-ghost,.cursor-click { display:none!important; }
