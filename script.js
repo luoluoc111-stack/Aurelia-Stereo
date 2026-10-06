@@ -1168,21 +1168,16 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
     const spectrumToggle = document.getElementById('spectrum-mobile-toggle');
 
     let stableHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
-    let typingBaseHeight = 0;
-    let settleTimer = 0;
 
     function captureStableHeight(force = false) {
         if (!mobileMq.matches) return;
-
-        // Never learn a new "stable" height while the INDEX field is focused.
-        // Some mobile browsers fire window.resize before visualViewport.resize;
-        // learning that smaller value is what made the receiver jump upward.
-        if (!force && document.activeElement === indexInput) return;
-        if (!force && body.classList.contains('mobile-keyboard-visible')) return;
-
         const current = Math.max(window.innerHeight, document.documentElement.clientHeight);
-        stableHeight = current;
-        root.style.setProperty('--stable-app-height', `${stableHeight}px`);
+        const keyboardVisible = body.classList.contains('mobile-keyboard-visible');
+
+        if (force || !keyboardVisible) {
+            stableHeight = current;
+            root.style.setProperty('--stable-app-height', `${stableHeight}px`);
+        }
     }
 
     function updateKeyboardState() {
@@ -1192,13 +1187,13 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
         }
 
         const vv = window.visualViewport;
-        const baseline = typingBaseHeight || stableHeight;
-        const covered = Math.max(0, baseline - vv.height - vv.offsetTop);
+        const covered = Math.max(0, stableHeight - vv.height - vv.offsetTop);
         const keyboardVisible = covered > 90;
 
         root.style.setProperty('--keyboard-height', `${covered}px`);
         body.classList.toggle('mobile-keyboard-visible', keyboardVisible);
 
+        // Typing mode follows the actual keyboard state, not focus alone.
         if (keyboardVisible && document.activeElement === indexInput) {
             body.classList.add('mobile-typing');
         } else if (!keyboardVisible) {
@@ -1209,30 +1204,28 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
 
     function enterTypingMode() {
         if (!mobileMq.matches) return;
-        clearTimeout(settleTimer);
-
-        // Freeze the exact pre-keyboard receiver height for this typing session.
-        typingBaseHeight = stableHeight || Math.max(window.innerHeight, document.documentElement.clientHeight);
-        root.style.setProperty('--stable-app-height', `${typingBaseHeight}px`);
         body.classList.add('mobile-typing');
 
-        // Deliberately do NOT scroll the station, scroll the page, or call
-        // scrollIntoView. The OS keyboard overlays the receiver instead.
+        // Important: do NOT call scrollIntoView here.
+        // That was what could pan the whole receiver upward on mobile browsers.
+        if (indexStation) {
+            const queryLine = indexInput?.closest('.query-line');
+            if (queryLine) {
+                const stationRect = indexStation.getBoundingClientRect();
+                const queryRect = queryLine.getBoundingClientRect();
+                const desiredTop = stationRect.top + 70;
+                const delta = queryRect.top - desiredTop;
+                if (delta > 0) indexStation.scrollTop += delta;
+            }
+        }
+
         setTimeout(updateKeyboardState, 60);
     }
 
     function leaveTypingMode() {
-        body.classList.remove('mobile-typing');
+        body.classList.remove('mobile-typing', 'mobile-keyboard-visible');
         root.style.removeProperty('--keyboard-height');
-
-        // Mobile keyboards animate closed. Waiting prevents us from capturing
-        // the temporary shrunken viewport and leaving a blank lower panel.
-        clearTimeout(settleTimer);
-        settleTimer = setTimeout(() => {
-            body.classList.remove('mobile-keyboard-visible');
-            typingBaseHeight = 0;
-            captureStableHeight(true);
-        }, 420);
+        captureStableHeight(true);
     }
 
     if (indexInput) {
@@ -1256,7 +1249,7 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
     }
 
     window.addEventListener('resize', () => {
-        if (document.activeElement !== indexInput && !body.classList.contains('mobile-keyboard-visible')) {
+        if (!body.classList.contains('mobile-keyboard-visible')) {
             captureStableHeight();
         }
     });
