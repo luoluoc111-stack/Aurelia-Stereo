@@ -1276,38 +1276,39 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
 
 
 
-/* Darker reticle with a slightly heavier, visible motion trace. */
+/* Warm walnut cursor: midway between the earlier fine version and the heavier dark version. */
 .cursor-ring,.cursor-ring.over-control {
-    width:27px; height:27px; border:0; border-radius:0; color:#2f2b27;
-    background:linear-gradient(currentColor,currentColor) left center / 7px 2px no-repeat,
-        linear-gradient(currentColor,currentColor) right center / 7px 2px no-repeat,
-        linear-gradient(currentColor,currentColor) center top / 2px 7px no-repeat,
-        linear-gradient(currentColor,currentColor) center bottom / 2px 7px no-repeat;
-    filter:drop-shadow(0 1px 2px rgba(0,0,0,.18));
+    width:27px; height:27px; border:0; border-radius:0; color:#5f493b;
+    background:linear-gradient(currentColor,currentColor) left center / 7px 1.5px no-repeat,
+        linear-gradient(currentColor,currentColor) right center / 7px 1.5px no-repeat,
+        linear-gradient(currentColor,currentColor) center top / 1.5px 7px no-repeat,
+        linear-gradient(currentColor,currentColor) center bottom / 1.5px 7px no-repeat;
+    filter:drop-shadow(0 1px 1px rgba(67,45,31,.14));
 }
 .cursor-ring::after,.cursor-ring.over-control::after {
-    left:12px; top:8px; width:2px; height:11px; border-radius:1px;
-    background:#1f1c19; transform:rotate(20deg);
+    left:12.5px; top:8px; width:1.5px; height:11px; border-radius:1px;
+    background:#4d392f; transform:rotate(20deg);
 }
-.cursor-ring.over-control { color:#181614; scale:1.14; }
+.cursor-ring.over-control { color:#4f392d; scale:1.12; }
 .cursor-ring.over-dial { rotate:45deg; }
-.cursor-ring.pressed { scale:.88; }
+.cursor-ring.pressed { scale:.90; }
 .cursor-ghost,.cursor-click {
     position:fixed; left:0; top:0; pointer-events:none!important; z-index:1999;
-    width:6px; height:6px; border:1.5px solid #3f3933; border-radius:50%;
+    width:5px; height:5px; border:1px solid #8a6248; border-radius:50%;
     opacity:0; transform:translate(-50%,-50%);
-    background:rgba(47,43,39,.10);
+    background:rgba(122,85,60,.12);
+    filter:drop-shadow(0 0 2px rgba(92,61,40,.10));
 }
-.cursor-ghost.tracing { animation:cursor-ghost-fade 360ms ease-out both; }
-.cursor-click { width:15px; height:15px; border-color:#27231f; }
-.cursor-click.radiating { animation:cursor-click-expand 250ms ease-out both; }
+.cursor-ghost.tracing { animation:cursor-ghost-fade 340ms ease-out both; }
+.cursor-click { width:14px; height:14px; border-color:#79533c; }
+.cursor-click.radiating { animation:cursor-click-expand 245ms ease-out both; }
 @keyframes cursor-ghost-fade {
-    from { opacity:.62; transform:translate(-50%,-50%) scale(1); }
-    to { opacity:0; transform:translate(-50%,-50%) scale(.45); }
+    from { opacity:.52; transform:translate(-50%,-50%) scale(1); }
+    to { opacity:0; transform:translate(-50%,-50%) scale(.50); }
 }
 @keyframes cursor-click-expand {
-    from { opacity:.56; transform:translate(-50%,-50%) scale(.8); }
-    to { opacity:0; transform:translate(-50%,-50%) scale(2.5); }
+    from { opacity:.48; transform:translate(-50%,-50%) scale(.8); }
+    to { opacity:0; transform:translate(-50%,-50%) scale(2.4); }
 }
 @media (hover:none) and (pointer:coarse) {
     .cursor-ring,.cursor-ghost,.cursor-click { display:none!important; }
