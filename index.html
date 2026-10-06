@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>On Air | Single Release</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="intro-modal" id="intro-modal" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+    <div class="intro-modal-box">
+      <p class="intro-modal-note">RECEIVER 0472 · OPERATION CARD</p>
+      <h2 id="intro-title">WELCOME / 使用说明</h2>
+      <div class="operation-dial" aria-hidden="true"><span>86</span><i></i><span>100 FM</span></div>
+      <div class="instruction-lines"><p>旋转 <strong>TUNE</strong> 浏览作品档案<small>Drag TUNE to browse the archive</small></p><p><strong>VOL</strong> 调整播放音量<small>Use VOL to adjust listening level</small></p><p>点击 <strong>OK</strong> 开启声音与本地天气<small>Press OK to enable audio and local conditions</small></p></div>
+      <button id="intro-modal-ok">OK</button>
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+    <button class="lightbox-arrow lightbox-prev" id="lightbox-prev" aria-label="Previous image">&#10094;</button>
+    <img class="lightbox-image" id="lightbox-image" src="" alt="">
+    <button class="lightbox-arrow lightbox-next" id="lightbox-next" aria-label="Next image">&#10095;</button>
+    <div class="lightbox-counter" id="lightbox-counter"></div>
+  </div>
+
+  <div class="radio-unit">
+    <div class="radio-topline">
+      <span class="radio-brand">AURELIA <i>STEREO</i></span>
+      <span class="radio-model">FM / ARCHIVE RECEIVER &nbsp; · &nbsp; 1974</span>
+      <div class="conditions" aria-label="Local conditions"><span class="conditions-icon weather-unavailable" id="weather-icon" aria-hidden="true"></span><span class="conditions-copy"><b>LOCAL CONDITIONS</b><i id="weather-summary">WEATHER UNAVAILABLE</i></span><span class="conditions-readout"><i id="weather-temp">--°</i><i id="local-time">LOCAL --:--</i><i id="day-phase">SIGNAL</i></span></div>
+      <button id="weather-retry" type="button" aria-label="Retry local weather">RETRY ↻</button>
+      <span class="air-status"><b></b> ON AIR</span>
+    </div>
+
+    <!-- ===== SCREEN ===== -->
+    <div class="screen">
+      <div class="spectrum-mobile-slot"></div>
+      <div class="station-panels" id="station-panels">
+
+        <section class="station" data-freq="86" id="station-play">
+          <span class="station-tag">86 / Play</span><span class="station-line">NOW TRANSMITTING</span>
+          <div class="release-layout">
+            <div class="play-hero"><div class="release-cover" aria-label="Release artwork placeholder"><span>ARTWORK<br>01</span></div><div class="release-copy"><p class="station-eyebrow">SINGLE RELEASE · 2026</p><h1>[TITLE OF<br>THE PIECE]</h1><p class="release-artist">[ARTIST / COMPOSER]</p><p class="station-body type-line" data-typewriter>A small transmission for late rooms, held notes and the minute before a signal settles into focus.</p><div class="release-meta"><span>04:32</span><span>2026</span><span>STEREO</span></div></div></div>
+            <div class="play-controls"><button class="transport-toggle" id="play-toggle" type="button" aria-pressed="false"><span class="transport-led"></span><span class="transport-icon">▶</span><span class="transport-label">PLAY</span></button><button class="info-trigger" id="release-info-toggle" type="button" aria-expanded="false">RELEASE INFO <span>▸</span></button></div>
+          </div>
+        </section>
+
+        <section class="station paper-station" data-freq="88" id="station-story">
+          <span class="station-tag">88 / Story</span><span class="station-line">ORIGIN SIGNAL</span><span class="archive-kicker">ARCHIVE NOTE · FILE 01 · 2026</span><h1>Notes from<br>the room.</h1>
+          <button class="story-switch" type="button" role="switch" aria-checked="false" aria-label="Process view" aria-controls="story-text process-text"><span class="story-thumb" aria-hidden="true"></span><span class="story-label">STORY</span></button>
+          <div class="story-panel active" data-story-panel="story"><p class="station-body type-line" data-typewriter>[Describe the image, memory, place or question that set this work in motion. Keep it personal and precise: the room, the hour, the sound that stayed.]</p><p class="liner-note">“A melody can be an object: turned over, left in the light, returned to later.”</p></div>
+          <div class="story-panel" data-story-panel="process"><p class="station-body">[Briefly describe the working method: first sketch, revision, recording, and the decision that finally made the arrangement feel complete.]</p><div class="process-line"><span>SKETCH</span><i></i><span>ARRANGE</span><i></i><span>RECORD</span><i></i><span>MASTER</span></div></div>
+        </section>
+
+        <section class="station index-station" data-freq="90" id="station-index">
+          <span class="station-tag">90 / Index</span><span class="station-line">ARCHIVE SEARCH</span><span class="archive-kicker">CATALOGUE TERMINAL · LOCAL INDEX</span>
+          <div class="typewriter-search" id="typewriter-machine">
+            <div class="paper-assembly"><div class="paper-roller"><i></i></div><div class="typewriter-paper" id="index-paper"><p class="paper-heading">ARCHIVE INDEX</p><p class="paper-instruction">TYPE A WORD OR PHRASE</p><div class="query-line"><span>&gt;&nbsp;</span><input id="index-query" type="text" aria-label="Search the release archive" autocomplete="off" spellcheck="false" placeholder="TYPE HERE"></div><div class="index-results" id="index-results"></div></div></div>
+            <div class="typewriter-body"><div class="typewriter-slot"></div><div class="typewriter-keyboard" id="typewriter-keyboard" aria-label="Archive search keyboard"></div><div class="typewriter-badge">ARCHIVE OFFICE · MODEL 90</div></div>
+          </div>
+        </section>
+
+        <section class="station paper-station" data-freq="92" id="station-credits">
+          <span class="station-tag">92 / Credits</span><span class="station-line">PERSONNEL / APPARATUS</span><span class="archive-kicker">FILE 02 · PERSONNEL REGISTER · REVISION 03</span><h1>Personnel<br>&amp; apparatus.</h1>
+          <dl class="credits-list"><div><dt>COMPOSED BY</dt><dd>[Name]</dd></div><div><dt>ARRANGED &amp; PRODUCED BY</dt><dd>[Name]</dd></div><div><dt>RECORDED IN</dt><dd>[Studio / City]</dd></div><div><dt>DAW</dt><dd>[Cubase / Ableton / Logic]</dd></div><div><dt>INSTRUMENTS</dt><dd>[Piano, synthesizer, bass, field recordings]</dd></div><div><dt>MIX &amp; MASTER</dt><dd>[Name / Studio]</dd></div></dl>
+        </section>
+
+        <section class="station paper-station" data-freq="94" id="station-notes">
+          <span class="station-tag">94 / Notes</span><span class="station-line">INTERNAL STRUCTURE</span><span class="archive-kicker">COMPOSITION FILE · REVISION 03 · ARCHIVE ENTRY PENDING</span><h1>Inside the<br>arrangement.</h1>
+          <div class="notes-grid"><article><b>01</b><h3>HARMONY</h3><p>[A note on the central chord movement, voicing, or harmonic colour.]</p></article><article><b>02</b><h3>FORM</h3><p>[A note on sections, repetition, silence, or the moment the piece changes direction.]</p></article><article><b>03</b><h3>ORCHESTRATION</h3><p>[A note on instrumental roles and the balance between acoustic and electronic sound.]</p></article><article><b>04</b><h3>PRODUCTION</h3><p>[A concise production note: space, saturation, editing, or mix decisions.]</p></article></div>
+        </section>
+
+        <section class="station" data-freq="96" id="station-visuals">
+          <span class="station-tag">96 / Visuals</span><span class="station-line">ARCHIVE WINDOW</span><h1>Working<br>materials.</h1>
+          <div class="visual-browser"><div class="visual-window" id="visual-window" role="button" tabindex="0" aria-label="Open current visual in lightbox"><div class="visual-slide active" data-visual-project="daw-session"><div class="document-preview piano-roll"><span>PIANO ROLL / ARRANGEMENT OVERVIEW</span></div></div><div class="visual-slide" data-visual-project="mixer-view"><div class="document-preview mixer-view"><span>MIXER / BALANCE AND ROUTING</span></div></div><div class="visual-slide" data-visual-project="score-pages"><div class="document-preview score-view"><span>SCORE / REVISION 03</span></div></div><span class="visual-glass" aria-hidden="true"></span></div><div class="visual-console"><button id="visual-prev" type="button">← PREV</button><div class="visual-selector" role="tablist"><button class="active" data-visual-index="0"><b>01</b> DAW SESSION</button><button data-visual-index="1"><b>02</b> MIXER</button><button data-visual-index="2"><b>03</b> SCORE</button></div><button id="visual-next" type="button">NEXT →</button></div></div>
+        </section>
+
+        <section class="station" data-freq="98" id="station-archive">
+          <span class="station-tag">98 / Archive</span><span class="station-line">RELEASE MATERIALS</span><h1>Release<br>documents.</h1>
+          <div class="download-list"><div class="archive-file master-audio"><span>01</span><strong>MASTER AUDIO</strong><em>MP3 · PUBLIC</em><div class="file-actions"><button id="archive-listen" type="button"><i>▶</i><span>LISTEN</span></button><button id="archive-download" class="download-button" type="button">DOWNLOAD ↓</button></div></div><div class="archive-file download-disabled" aria-disabled="true"><span>02</span><strong>LINER NOTES</strong><em>PDF · ADD WHEN READY</em><b>—</b></div><div class="private-file"><span>03</span><strong>CUBASE SESSION</strong><em>ARCHIVED — PRIVATE</em><b>LOCKED</b></div></div>
+          <p id="download-status" class="download-status" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="station end-station" data-freq="100" id="station-end">
+          <span class="station-tag">100 / End</span><span class="station-line">TRANSMISSION CLOSED</span><div class="end-mark">◉</div><h1>End of<br>transmission.</h1><p class="station-body" data-typewriter>Thank you for listening. This release was made by [ARTIST / COMPOSER] in [YEAR].</p><div class="end-links"><a href="mailto:you@example.com">CONTACT</a><a href="#play">RETURN TO PLAY</a></div><p class="copyright">© [YEAR] [ARTIST / COMPOSER]. ALL RIGHTS RESERVED.</p><span class="cat-easter" aria-hidden="true"><i class="cat-head"></i><i class="cat-body"></i><i class="cat-tail"></i><i class="cat-eyes"></i></span>
+        </section>
+
+        <!-- Optional easter egg: hidden below the printed dial range, only reachable
+             by typing the exact SECRET_FREQ value from script.js into the readout.
+             Delete this whole <section> (and its logic in script.js) if you'd
+             rather not have a hidden station at all. -->
+        <section class="station numbers-station" data-freq="84" id="station-numbers">
+          <p class="numbers-word" id="numbers-word">—</p>
+        </section>
+
+        <div class="no-signal" id="no-signal">
+          <div class="eq-bars"><span></span><span></span><span></span><span></span><span></span></div>
+          <p>SEARCHING…</p>
+        </div>
+      </div>
+      <aside class="release-drawer" id="release-drawer" aria-hidden="true"><div class="drawer-head"><span>RELEASE INFORMATION</span><button id="release-info-close" type="button" aria-label="Close release information">×</button></div><dl><div><dt>CATALOGUE</dt><dd>ARL-001</dd></div><div><dt>YEAR</dt><dd>2026</dd></div><div><dt>DURATION</dt><dd>04:32</dd></div><div><dt>FORMAT</dt><dd>48 kHz / 24 bit</dd></div><div><dt>FIELD</dt><dd>Stereo</dd></div><div><dt>RECORDED</dt><dd>[Studio / City]</dd></div><div><dt>PRODUCED</dt><dd>[Producer]</dd></div></dl></aside>
+    </div>
+
+    <!-- ===== TUNER PANEL ===== -->
+    <div class="tuner-panel">
+
+      <div class="scale-window" id="scale-window">
+        <div class="scale-labels" id="scale-labels"></div>
+        <div class="scale-ticks" id="scale-ticks"></div>
+        <div class="scale-glass"></div>
+        <div class="needle" id="needle"></div>
+      </div>
+
+      <div class="control-row">
+        <div class="knob-group">
+          <div class="knob knob-horizontal" id="tuning-knob"><div class="knob-indicator"></div></div>
+          <span class="knob-label">TUNE</span>
+        </div>
+
+        <div class="spectrum-unit global-spectrum"><div class="spectrum-header"><span>SPECTRUM ANALYZER / 40 Hz—16 kHz</span><i id="spectrum-state">STANDBY</i></div><canvas id="spectrum-canvas" aria-label="Live vertical frequency spectrum analyzer"></canvas><div class="meter-scale"><span>40</span><span>100</span><span>500</span><span>1k</span><span>5k</span><span>16k Hz</span></div></div>
+        <div class="readout-block">
+          <span class="readout-section" id="readout-section">PLAY</span>
+          <div class="readout">
+            <input type="text" id="freq-input" inputmode="decimal" value="86">
+            <small>FM</small>
+          </div>
+        </div>
+
+        <div class="knob-group">
+          <div class="knob" id="volume-knob"><div class="knob-indicator"></div></div>
+          <span class="knob-label">VOL</span>
+        </div>
+      </div>
+
+      <div class="tuner-footnote" aria-hidden="true"><span>PRECISION TUNING</span><span>MADE FOR LISTENING</span><span>NO. 0472</span></div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
