@@ -1,5 +1,15 @@
 # Aurelia Stereo
 
+## Contributors / 项目协作
+
+**ChatGPT (OpenAI)**  
+Front-end development · Interaction design · Technical implementation · Debugging
+
+**Charlie**  
+Original music · Creative direction · Concept · Visual direction · Production
+
+Aurelia Stereo was developed through an ongoing collaboration between Charlie and ChatGPT.
+
 一个以复古 FM 收音机为界面的单曲作品档案。
 访客通过调节频率浏览不同频道，而不是使用普通网页导航。
 每个频道对应作品的不同部分：播放、创作故事、档案检索、制作人员、
