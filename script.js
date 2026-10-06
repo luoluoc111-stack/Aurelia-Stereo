@@ -110,7 +110,7 @@ async function detectSequentialFiles(basePath, extensions, maxTry = 30) {
 // This microsite has one continuous master track.  Tuning changes the printed
 // chapter only; it never changes the music underneath it.
 const stationMusic = new Audio();
-const MAIN_TRACK_URL = 'assets/audio/home/1.mp3';
+const MAIN_TRACK_URL = 'assets/audio/home/BAP.mp3';
 stationMusic.loop = true;
 stationMusic.volume = 0;
 let playbackRequested = false;

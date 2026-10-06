@@ -1857,3 +1857,100 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
         box-shadow:0 0 8px rgba(198,154,85,.35);
     }
 }
+
+
+/* ===== CONTENT PASS v13 ===== */
+.release-description {
+    line-height:1.65;
+}
+.release-description span[lang="en"] {
+    display:block;
+    margin-top:.28rem;
+    color:#746b60;
+    font-size:.82em;
+    letter-spacing:.01em;
+}
+.story-copy {
+    max-width:58rem;
+}
+.story-copy > p + p {
+    margin-top:.8rem;
+}
+.story-translation {
+    margin-top:1.1rem;
+    padding-top:.85rem;
+    border-top:1px solid rgba(87,71,49,.18);
+    color:#6f685e;
+    font-size:.82em;
+    line-height:1.65;
+}
+.story-translation p + p {
+    margin-top:.7rem;
+}
+.note-translation {
+    margin-top:.7rem!important;
+    padding-top:.6rem;
+    border-top:1px solid rgba(87,71,49,.16);
+    color:#786f62!important;
+    font-size:.82em;
+    line-height:1.55;
+}
+.visual-photo {
+    position:relative;
+    overflow:hidden;
+    background:#171816!important;
+}
+.visual-photo::before,
+.visual-photo::after {
+    display:none!important;
+}
+.visual-photo picture {
+    display:block;
+    width:100%;
+    height:100%;
+}
+
+.visual-photo img {
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center;
+    filter:saturate(.88) contrast(.98) brightness(.96);
+}
+.visual-photo span {
+    position:absolute;
+    z-index:3;
+    left:12px;
+    bottom:10px;
+    padding:4px 7px;
+    color:#e8dfcf;
+    background:rgba(18,18,16,.72);
+    border:1px solid rgba(232,223,207,.18);
+    font:.48rem/1.2 'Space Mono',monospace;
+    letter-spacing:.08em;
+    text-shadow:0 1px 2px #000;
+}
+#archive-download:disabled {
+    cursor:not-allowed;
+    opacity:.5;
+    transform:none!important;
+}
+
+@media (max-width:700px) {
+    .story-copy {
+        font-size:.92em;
+    }
+    .story-translation,
+    .note-translation {
+        font-size:.78em;
+    }
+}
+
+/* ===== v16: 88 Chinese reading face ===== */
+#station-story .story-copy > p[lang="zh-CN"] {
+    font-family:"Noto Serif SC","Songti SC","STSong",serif;
+    font-weight:400;
+    line-height:1.86;
+    letter-spacing:.015em;
+}

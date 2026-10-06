@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=overlays-content">
   <title>Aurelia Stereo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Noto+Serif+SC:wght@400;500&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 
@@ -46,7 +46,7 @@
         <section class="station" data-freq="86" id="station-play">
           <span class="station-tag">86 / Play</span><span class="station-line">NOW TRANSMITTING</span>
           <div class="release-layout">
-            <div class="play-hero"><div class="release-cover" aria-label="Release artwork placeholder"><span>ARTWORK<br>01</span></div><div class="release-copy"><p class="station-eyebrow">SINGLE RELEASE · 2026</p><h1>[TITLE OF<br>THE PIECE]</h1><p class="release-artist">[ARTIST / COMPOSER]</p><p class="station-body type-line" data-typewriter>A small transmission for late rooms, held notes and the minute before a signal settles into focus.</p><div class="release-meta"><span>04:32</span><span>2026</span><span>STEREO</span></div></div></div>
+            <div class="play-hero"><div class="release-cover" aria-label="Release artwork placeholder"><span>ARTWORK<br>01</span></div><div class="release-copy"><p class="station-eyebrow">SINGLE RELEASE · 2026</p><h1>Bethel Abraham's<br>Portrait</h1><p class="release-artist">Charlie</p><p class="station-body type-line release-description">伯特利·亚伯拉罕公爵的肖像画<br>作品灵感源于《诡秘之主》同名角色伯特利·亚伯拉罕。<br><span lang="en">Inspired by Bethel Abraham from <em>Lord of Mysteries</em>.</span></p><div class="release-meta"><span>04:40</span><span>2026</span><span>STEREO</span></div></div></div>
             <div class="play-controls"><button class="transport-toggle" id="play-toggle" type="button" aria-pressed="false"><span class="transport-led"></span><span class="transport-icon">▶</span><span class="transport-label">PLAY</span></button><button class="info-trigger" id="release-info-toggle" type="button" aria-expanded="false">RELEASE INFO <span>▸</span></button></div>
           </div>
         </section>
@@ -54,8 +54,30 @@
         <section class="station paper-station" data-freq="88" id="station-story">
           <span class="station-tag">88 / Story</span><span class="station-line">ORIGIN SIGNAL</span><span class="archive-kicker">ARCHIVE NOTE · FILE 01 · 2026</span><h1>Notes from<br>the room.</h1>
           <button class="story-switch" type="button" role="switch" aria-checked="false" aria-label="Process view" aria-controls="story-text process-text"><span class="story-thumb" aria-hidden="true"></span><span class="story-label">STORY</span></button>
-          <div class="story-panel active" data-story-panel="story"><p class="station-body type-line" data-typewriter>[Describe the image, memory, place or question that set this work in motion. Keep it personal and precise: the room, the hour, the sound that stayed.]</p><p class="liner-note">“A melody can be an object: turned over, left in the light, returned to later.”</p></div>
-          <div class="story-panel" data-story-panel="process"><p class="station-body">[Briefly describe the working method: first sketch, revision, recording, and the decision that finally made the arrangement feel complete.]</p><div class="process-line"><span>SKETCH</span><i></i><span>ARRANGE</span><i></i><span>RECORD</span><i></i><span>MASTER</span></div></div>
+          <div class="story-panel active" data-story-panel="story">
+            <div class="station-body story-copy">
+              <p lang="zh-CN">古老荒芜的城堡长长的回廊里有一幅肃穆的画像，像上的公爵庄严而沉默，却在某个瞬间眨了下自己醒目的蓝眼睛，于是过去的时光映在他蓝宝石的瞳孔上。</p>
+              <p lang="zh-CN">伯特利行走在第四纪帝国车水马龙的大地上，穿梭在宫阙间众人敬仰的注视中。他人的眼睛于祂而言是禁锢的画框。所以祂离开这一切，去往瑰丽的星空，成就祂最伟大的一次旅行。</p>
+              <p lang="zh-CN">蓝色绿色的星球分散在无数疲惫的死星的缝隙里，如尘埃漂浮在大海。之上的文明与生命更是渺小。伯特利遨游在浩瀚星空里，却迷失于曾经一抬头就能见到的月亮。</p>
+              <div class="story-translation" lang="en">
+                <p>Along the long corridors of an ancient, desolate castle hangs a solemn portrait. The Duke in the painting is dignified and silent, yet in one fleeting moment his striking blue eyes seem to blink, and the past is reflected in his sapphire irises.</p>
+                <p>Bethel walks through the bustling lands of the Fourth Epoch Empire, passing between palaces beneath the reverent gaze of the crowd. To Him, the eyes of others are frames of confinement. So He leaves it all behind and sets out for the magnificent stars, undertaking His greatest journey.</p>
+                <p>Blue and green planets lie scattered in the gaps between countless weary dead stars, like dust floating upon an ocean. The civilizations and lives upon them seem smaller still. Bethel travels across the vastness of the cosmos, only to lose Himself beneath the moon that once could be seen simply by looking up.</p>
+              </div>
+            </div>
+            <p class="liner-note">月是故乡明。</p>
+          </div>
+          <div class="story-panel" data-story-panel="process">
+            <div class="station-body story-copy">
+              <p lang="zh-CN">作品以钢琴演奏的 A 段主题动机塑造伯特利·亚伯拉罕的形象。引子由吉他缓缓展开，如同视线由远及近地掠过一幅尘封数百年的公爵肖像。随着作品推进，音乐从第四纪的宫廷逐渐进入星空：木管表现信众肃穆的注视，而全新的合成器音色则打开宇宙旅行的场景。</p>
+              <p lang="zh-CN">在假再现段中，公爵的主题被重新染色并遭到模仿、追逐和侵蚀；直至最终再现与尾声，钢琴重新奏响最初的材料，使伯特利的意志获得短暂的回归。</p>
+              <div class="story-translation" lang="en">
+                <p>The A-section theme, played by piano, shapes the image of Duke Bethel Abraham. The introduction unfolds gradually through guitar, as though the gaze were moving from afar toward a centuries-old portrait. As the piece progresses, the music moves from the court of the Fourth Epoch into the stars: woodwinds suggest the solemn gaze of his followers, while new synthesizer timbres open the scene of a journey through the cosmos.</p>
+                <p>In the false recapitulation, the Duke's theme is recolored and subjected to imitation, pursuit, and erosion. Only in the final recapitulation and coda does the piano return to the original material, allowing Bethel's will to surface again for a brief moment.</p>
+              </div>
+            </div>
+            <div class="process-line"><span>SKETCH</span><i></i><span>ARRANGE</span><i></i><span>RECORD</span><i></i><span>MASTER</span></div>
+          </div>
         </section>
 
         <section class="station index-station" data-freq="90" id="station-index">
@@ -68,27 +90,32 @@
 
         <section class="station paper-station" data-freq="92" id="station-credits">
           <span class="station-tag">92 / Credits</span><span class="station-line">PERSONNEL / APPARATUS</span><span class="archive-kicker">FILE 02 · PERSONNEL REGISTER · REVISION 03</span><h1>Personnel<br>&amp; apparatus.</h1>
-          <dl class="credits-list"><div><dt>COMPOSED BY</dt><dd>[Name]</dd></div><div><dt>ARRANGED &amp; PRODUCED BY</dt><dd>[Name]</dd></div><div><dt>RECORDED IN</dt><dd>[Studio / City]</dd></div><div><dt>DAW</dt><dd>[Cubase / Ableton / Logic]</dd></div><div><dt>INSTRUMENTS</dt><dd>[Piano, synthesizer, bass, field recordings]</dd></div><div><dt>MIX &amp; MASTER</dt><dd>[Name / Studio]</dd></div></dl>
+          <dl class="credits-list"><div><dt>COMPOSED BY</dt><dd>Charlie</dd></div><div><dt>ARRANGED &amp; PRODUCED BY</dt><dd>Charlie</dd></div><div><dt>PRODUCED IN</dt><dd>Wuhan, China</dd></div><div><dt>DAW</dt><dd>Cubase</dd></div><div><dt>INSTRUMENTS</dt><dd>Synthesizer, Guitar, Electric Piano, Harp, Orchestra</dd></div><div><dt>MIX &amp; MASTER</dt><dd>Charlie</dd></div></dl>
         </section>
 
         <section class="station paper-station" data-freq="94" id="station-notes">
           <span class="station-tag">94 / Notes</span><span class="station-line">INTERNAL STRUCTURE</span><span class="archive-kicker">COMPOSITION FILE · REVISION 03 · ARCHIVE ENTRY PENDING</span><h1>Inside the<br>arrangement.</h1>
-          <div class="notes-grid"><article><b>01</b><h3>HARMONY</h3><p>[A note on the central chord movement, voicing, or harmonic colour.]</p></article><article><b>02</b><h3>FORM</h3><p>[A note on sections, repetition, silence, or the moment the piece changes direction.]</p></article><article><b>03</b><h3>ORCHESTRATION</h3><p>[A note on instrumental roles and the balance between acoustic and electronic sound.]</p></article><article><b>04</b><h3>PRODUCTION</h3><p>[A concise production note: space, saturation, editing, or mix decisions.]</p></article></div>
+          <div class="notes-grid">
+            <article><b>01</b><h3>HARMONY</h3><p>—</p></article>
+            <article><b>02</b><h3>FORM</h3><p>作品由五个主要段落构成。A 段首次呈现公爵的主题；B 段进入信众注视下的肃穆场景；C 段转入宇宙旅行。随后假再现 A′ 对原有主题进行异化，最终在 A″ 与尾声中重新回归最初的钢琴材料。</p><p class="note-translation" lang="en">The work is divided into five large sections. Section A first presents the Duke's theme; Section B moves into the solemn scene of being watched by his followers; Section C turns toward the journey through the cosmos. The false recapitulation A′ transforms the original theme, before A″ and the coda finally return to the initial piano material.</p></article>
+            <article><b>03</b><h3>ORCHESTRATION</h3><p>钢琴承担伯特利的核心主题，其古典而灵动的线条象征公爵优雅、处变不惊的步伐。吉他在引子中由远及近地勾勒古老肖像；木管表现庄严的凝视；合成器则成为星空与未知空间的声音载体。</p><p class="note-translation" lang="en">The piano carries Bethel's central theme, its classical yet agile lines suggesting the Duke's elegant and composed bearing. Guitar gradually sketches the ancient portrait in the introduction; woodwinds portray the solemn gaze upon him; synthesizers become the sonic medium for the stars and unknown space.</p></article>
+            <article><b>04</b><h3>THEMATIC DEVELOPMENT</h3><p>在假再现 A′ 中，公爵的主题改由 Plush 合成器音色演奏，象征月亮上的邪恶神灵尝试模仿并取代伯特利。对主题动机的卡农式模仿形成追逐与抵抗，原本从容的动机也逐渐变得彷徨、犹疑。最终钢琴重新奏响 A 段材料，使伯特利的意志短暂回归——旅行者终将回家，而公爵却只能对心心念念的故乡惊鸿一瞥，随即悄然逝去。</p><p class="note-translation" lang="en">In the false recapitulation A′, the Duke's theme is transferred to a Plush synthesizer timbre, symbolizing the evil deity upon the moon attempting to imitate and replace Bethel. Canonic imitation turns the motif into a clear pursuit and resistance, while the once-composed theme gradually becomes hesitant and uncertain. The piano finally returns to the A-section material, allowing Bethel's will to re-emerge for a brief moment: the traveler is meant to return home, yet the Duke is granted only a fleeting glimpse of the homeland he longed for before quietly passing away.</p></article>
+          </div>
         </section>
 
         <section class="station" data-freq="96" id="station-visuals">
           <span class="station-tag">96 / Visuals</span><span class="station-line">ARCHIVE WINDOW</span><h1>Working<br>materials.</h1>
-          <div class="visual-browser"><div class="visual-window" id="visual-window" role="button" tabindex="0" aria-label="Open current visual in lightbox"><div class="visual-slide active" data-visual-project="daw-session"><div class="document-preview piano-roll"><span>PIANO ROLL / ARRANGEMENT OVERVIEW</span></div></div><div class="visual-slide" data-visual-project="mixer-view"><div class="document-preview mixer-view"><span>MIXER / BALANCE AND ROUTING</span></div></div><div class="visual-slide" data-visual-project="score-pages"><div class="document-preview score-view"><span>SCORE / REVISION 03</span></div></div><span class="visual-glass" aria-hidden="true"></span></div><div class="visual-console"><button id="visual-prev" type="button">← PREV</button><div class="visual-selector" role="tablist"><button class="active" data-visual-index="0"><b>01</b> DAW SESSION</button><button data-visual-index="1"><b>02</b> MIXER</button><button data-visual-index="2"><b>03</b> SCORE</button></div><button id="visual-next" type="button">NEXT →</button></div></div>
+          <div class="visual-browser"><div class="visual-window" id="visual-window" role="button" tabindex="0" aria-label="Open current visual in lightbox"><div class="visual-slide active" data-visual-project="daw-session"><div class="document-preview visual-photo"><picture><source media="(max-width:700px)" srcset="assets/projects/daw-session/preview-mobile.jpg"><img src="assets/projects/daw-session/preview-desktop.jpg" alt="Cubase arrangement session screenshot"></picture><span>DAW SESSION / ARRANGEMENT TIMELINE</span></div></div><div class="visual-slide" data-visual-project="audio-spectrum"><div class="document-preview visual-photo"><picture><source media="(max-width:700px)" srcset="assets/projects/audio-spectrum/preview-mobile.jpg"><img src="assets/projects/audio-spectrum/preview-desktop.jpg" alt="Stereo spectral analysis screenshot"></picture><span>AUDIO SPECTRUM / STEREO ANALYSIS</span></div></div><div class="visual-slide" data-visual-project="score-pages"><div class="document-preview visual-photo"><picture><source media="(max-width:700px)" srcset="assets/projects/score-pages/preview-mobile.jpg"><img src="assets/projects/score-pages/preview-desktop.jpg" alt="Opening page of the score"></picture><span>SCORE / OPENING PAGE</span></div></div><span class="visual-glass" aria-hidden="true"></span></div><div class="visual-console"><button id="visual-prev" type="button">← PREV</button><div class="visual-selector" role="tablist"><button class="active" data-visual-index="0"><b>01</b> DAW SESSION</button><button data-visual-index="1"><b>02</b> SPECTRUM</button><button data-visual-index="2"><b>03</b> SCORE</button></div><button id="visual-next" type="button">NEXT →</button></div></div>
         </section>
 
         <section class="station" data-freq="98" id="station-archive">
           <span class="station-tag">98 / Archive</span><span class="station-line">RELEASE MATERIALS</span><h1>Release<br>documents.</h1>
-          <div class="download-list"><div class="archive-file master-audio"><span>01</span><strong>MASTER AUDIO</strong><em>MP3 · PUBLIC</em><div class="file-actions"><button id="archive-listen" type="button"><i>▶</i><span>LISTEN</span></button><button id="archive-download" class="download-button" type="button">DOWNLOAD ↓</button></div></div><div class="archive-file download-disabled" aria-disabled="true"><span>02</span><strong>LINER NOTES</strong><em>PDF · ADD WHEN READY</em><b>—</b></div><div class="private-file"><span>03</span><strong>CUBASE SESSION</strong><em>ARCHIVED — PRIVATE</em><b>LOCKED</b></div></div>
+          <div class="download-list"><div class="archive-file master-audio"><span>01</span><strong>MASTER AUDIO</strong><em>MP3 · LISTEN ONLY</em><div class="file-actions"><button id="archive-listen" type="button"><i>▶</i><span>LISTEN</span></button><button id="archive-download" class="download-button" type="button" disabled aria-disabled="true">LOCKED</button></div></div><div class="archive-file download-disabled" aria-disabled="true"><span>02</span><strong>LINER NOTES</strong><em>PDF · NOT AVAILABLE</em><b>—</b></div><div class="private-file"><span>03</span><strong>CUBASE SESSION</strong><em>ARCHIVED — PRIVATE</em><b>LOCKED</b></div></div>
           <p id="download-status" class="download-status" role="status" aria-live="polite"></p>
         </section>
 
         <section class="station end-station" data-freq="100" id="station-end">
-          <span class="station-tag">100 / End</span><span class="station-line">TRANSMISSION CLOSED</span><div class="end-mark">◉</div><h1>End of<br>transmission.</h1><p class="station-body" data-typewriter>Thank you for listening. This release was made by [ARTIST / COMPOSER] in [YEAR].</p><div class="end-links"><a href="mailto:you@example.com">CONTACT</a><a href="#play">RETURN TO PLAY</a></div><p class="copyright">© [YEAR] [ARTIST / COMPOSER]. ALL RIGHTS RESERVED.</p><span class="cat-easter" aria-hidden="true"><i class="cat-head"></i><i class="cat-body"></i><i class="cat-tail"></i><i class="cat-eyes"></i></span>
+          <span class="station-tag">100 / End</span><span class="station-line">TRANSMISSION CLOSED</span><div class="end-mark">◉</div><h1>End of<br>transmission.</h1><p class="station-body" data-typewriter>Thank you for listening. This release was made by Charlie in 2026.</p><div class="end-links"><a href="mailto:siriushulot@163.com">CONTACT</a><a href="#play">RETURN TO PLAY</a></div><p class="copyright">© 2026 Charlie. ALL RIGHTS RESERVED.</p><span class="cat-easter" aria-hidden="true"><i class="cat-head"></i><i class="cat-body"></i><i class="cat-tail"></i><i class="cat-eyes"></i></span>
         </section>
 
         <!-- Optional easter egg: hidden below the printed dial range, only reachable
@@ -104,7 +131,7 @@
           <p>SEARCHING…</p>
         </div>
       </div>
-      <aside class="release-drawer" id="release-drawer" aria-hidden="true"><div class="drawer-head"><span>RELEASE INFORMATION</span><button id="release-info-close" type="button" aria-label="Close release information">×</button></div><dl><div><dt>CATALOGUE</dt><dd>ARL-001</dd></div><div><dt>YEAR</dt><dd>2026</dd></div><div><dt>DURATION</dt><dd>04:32</dd></div><div><dt>FORMAT</dt><dd>48 kHz / 24 bit</dd></div><div><dt>FIELD</dt><dd>Stereo</dd></div><div><dt>RECORDED</dt><dd>[Studio / City]</dd></div><div><dt>PRODUCED</dt><dd>[Producer]</dd></div></dl></aside>
+      <aside class="release-drawer" id="release-drawer" aria-hidden="true"><div class="drawer-head"><span>RELEASE INFORMATION</span><button id="release-info-close" type="button" aria-label="Close release information">×</button></div><dl><div><dt>CATALOGUE</dt><dd>ARL-001</dd></div><div><dt>YEAR</dt><dd>2026</dd></div><div><dt>DURATION</dt><dd>04:40</dd></div><div><dt>FORMAT</dt><dd>44.1 kHz / 16 bit</dd></div><div><dt>FIELD</dt><dd>Stereo</dd></div><div><dt>PRODUCED IN</dt><dd>Wuhan, China</dd></div><div><dt>PRODUCED</dt><dd>Charlie</dd></div></dl></aside>
     </div>
 
     <!-- ===== TUNER PANEL ===== -->
@@ -143,6 +170,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=12"></script>
+  <script src="script.js?v=16"></script>
 </body>
 </html>
