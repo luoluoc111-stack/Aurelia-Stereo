@@ -1075,7 +1075,7 @@ cursorRing.setAttribute('aria-hidden', 'true');
 document.body.appendChild(cursorRing);
 let cursorFrame = 0;
 let cursorPoint = null;
-const cursorGhosts = Array.from({ length:6 }, () => {
+const cursorGhosts = Array.from({ length:8 }, () => {
     const dot = document.createElement('div');
     dot.className = 'cursor-ghost';
     dot.setAttribute('aria-hidden', 'true');
@@ -1115,8 +1115,8 @@ document.addEventListener('pointermove', event => {
     cursorRing.classList.toggle('over-dial', !!event.target.closest('.knob'));
     cursorPoint = { x:event.clientX, y:event.clientY };
     const now = performance.now();
-    if (!cursorReducedMotion.matches && now - lastGhostTime >= 32 && lastGhostPoint
-        && Math.hypot(cursorPoint.x - lastGhostPoint.x, cursorPoint.y - lastGhostPoint.y) >= 4) {
+    if (!cursorReducedMotion.matches && now - lastGhostTime >= 24 && lastGhostPoint
+        && Math.hypot(cursorPoint.x - lastGhostPoint.x, cursorPoint.y - lastGhostPoint.y) >= 3) {
         const dot = cursorGhosts[ghostIndex++ % cursorGhosts.length];
         dot.style.left = `${lastGhostPoint.x}px`;
         dot.style.top = `${lastGhostPoint.y}px`;
