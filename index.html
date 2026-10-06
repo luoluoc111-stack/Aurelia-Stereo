@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=overlays-content">
   <title>Aurelia Stereo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
@@ -123,7 +123,7 @@
           <span class="knob-label">TUNE</span>
         </div>
 
-        <div class="spectrum-unit global-spectrum"><div class="spectrum-header"><span>SPECTRUM ANALYZER / 40 Hz—16 kHz</span><i id="spectrum-state">STANDBY</i></div><canvas id="spectrum-canvas" aria-label="Live vertical frequency spectrum analyzer"></canvas><div class="meter-scale"><span>40</span><span>100</span><span>500</span><span>1k</span><span>5k</span><span>16k Hz</span></div></div>
+        <div class="spectrum-unit global-spectrum"><div class="spectrum-header"><span>SPECTRUM ANALYZER / 40 Hz—16 kHz</span><i id="spectrum-state">STANDBY</i></div><canvas id="spectrum-canvas" aria-label="Live vertical frequency spectrum analyzer"></canvas><div class="meter-scale"><span>40</span><span>100</span><span>500</span><span>1k</span><span>5k</span><span>16k Hz</span></div><button class="spectrum-mobile-toggle" id="spectrum-mobile-toggle" type="button" aria-expanded="true" aria-label="收起频谱"><span class="spectrum-toggle-up">⌃</span><span class="spectrum-toggle-down">⌄</span></button></div>
         <div class="readout-block">
           <span class="readout-section" id="readout-section">PLAY</span>
           <div class="readout">
@@ -143,6 +143,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=6"></script>
+  <script src="script.js?v=7"></script>
 </body>
 </html>

@@ -1516,3 +1516,208 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
         transition: none !important;
     }
 }
+
+
+/* ===== MOBILE INTERACTION PASS v7 =====
+   - collapsible spectrum
+   - software keyboard overlay/fallback handling
+   - cleaner typewriter input focus
+*/
+.spectrum-mobile-toggle { display:none; }
+
+#index-query,
+#index-query:focus,
+#index-query:focus-visible {
+    -webkit-appearance:none;
+    appearance:none;
+    outline:none;
+    box-shadow:none;
+    background:transparent;
+}
+
+@media (max-width:700px) {
+    /*
+      Keep the receiver tied to a stable viewport height. When a phone keyboard
+      shrinks visualViewport, the receiver stays full-height behind it instead
+      of being compressed into the remaining strip.
+    */
+    .radio-unit {
+        top:7px;
+        bottom:auto;
+        height:calc(var(--stable-app-height, 100dvh) - 14px);
+        max-height:none;
+    }
+
+    .screen {
+        transition:grid-template-rows .28s ease;
+    }
+
+    .spectrum-mobile-slot {
+        position:relative;
+        z-index:6;
+        overflow:visible;
+    }
+
+    .spectrum-mobile-slot > .global-spectrum {
+        position:relative;
+        overflow:visible;
+        transition:height .28s ease, padding .28s ease, border-width .28s ease;
+    }
+
+    .spectrum-mobile-toggle {
+        display:grid;
+        place-items:center;
+        position:absolute;
+        z-index:20;
+        left:50%;
+        bottom:-17px;
+        width:58px;
+        height:18px;
+        padding:0;
+        transform:translateX(-50%);
+        border:1px solid #33251a;
+        border-top:0;
+        border-radius:0 0 29px 29px;
+        background:linear-gradient(180deg,#7d593e,#563b2b);
+        color:#f0e4d0;
+        box-shadow:0 2px 3px rgba(35,22,14,.28), inset 0 -1px rgba(0,0,0,.28);
+        font:700 15px/1 "Space Mono",monospace;
+        letter-spacing:0;
+        cursor:pointer;
+        touch-action:manipulation;
+    }
+
+    .spectrum-mobile-toggle:active {
+        transform:translateX(-50%) translateY(1px);
+    }
+
+    .spectrum-toggle-down { display:none; }
+
+    .screen.spectrum-collapsed {
+        grid-template-rows:34px minmax(0,1fr);
+    }
+
+    .screen.spectrum-collapsed .spectrum-mobile-slot > .global-spectrum {
+        height:28px;
+        min-height:28px;
+        padding:4px 9px;
+        border-bottom-width:2px;
+    }
+
+    .screen.spectrum-collapsed .global-spectrum #spectrum-canvas,
+    .screen.spectrum-collapsed .global-spectrum .meter-scale,
+    .screen.spectrum-collapsed .global-spectrum .spectrum-header i {
+        display:none;
+    }
+
+    .screen.spectrum-collapsed .global-spectrum .spectrum-header {
+        height:20px;
+        margin:0;
+        align-items:center;
+        opacity:.78;
+    }
+
+    .screen.spectrum-collapsed .global-spectrum .spectrum-header > span {
+        font-size:0;
+    }
+
+    .screen.spectrum-collapsed .global-spectrum .spectrum-header > span::before {
+        content:"SPECTRUM";
+        font:700 .42rem/20px "Space Mono",monospace;
+        letter-spacing:.13em;
+    }
+
+    .screen.spectrum-collapsed .spectrum-toggle-up { display:none; }
+    .screen.spectrum-collapsed .spectrum-toggle-down { display:inline; }
+
+    /* The paper stays visually like paper when the real phone keyboard opens. */
+    #index-query {
+        border:0;
+        border-bottom:1px solid #85745c66;
+        border-radius:0;
+        padding:3px 0;
+        caret-color:#6d3f31;
+    }
+
+    #index-query:focus,
+    #index-query:focus-visible {
+        border:0;
+        border-bottom:1px solid #85745c88;
+        outline:0!important;
+        box-shadow:none!important;
+        background:transparent!important;
+    }
+
+    /*
+      While the OS keyboard is present, keep the useful "paper" in the upper
+      visible portion and remove the decorative web keyboard that would sit
+      behind the real keyboard anyway.
+    */
+    body.mobile-typing .index-station {
+        padding-top:24px;
+        padding-bottom:24px;
+        overflow-y:auto;
+        overscroll-behavior:contain;
+    }
+
+    body.mobile-typing .index-station .station-tag {
+        margin-bottom:8px;
+    }
+
+    body.mobile-typing .index-station .archive-kicker {
+        margin-bottom:7px;
+    }
+
+    body.mobile-typing .typewriter-search {
+        width:100%;
+        margin-top:0;
+    }
+
+    body.mobile-typing .paper-assembly {
+        width:94%;
+        margin-bottom:0;
+    }
+
+    body.mobile-typing .typewriter-paper {
+        min-height:150px;
+        max-height:calc(var(--keyboard-top, 62vh) - 120px);
+        padding:16px 13px 18px;
+        overflow-y:auto;
+    }
+
+    body.mobile-typing .typewriter-body {
+        display:none;
+    }
+
+    body.mobile-typing .tuner-panel {
+        visibility:hidden;
+        pointer-events:none;
+    }
+
+    body.mobile-typing .spectrum-mobile-slot {
+        opacity:.28;
+        pointer-events:none;
+    }
+
+    body.mobile-typing .screen {
+        grid-template-rows:34px minmax(0,1fr);
+    }
+
+    body.mobile-typing .spectrum-mobile-slot > .global-spectrum {
+        height:28px;
+        min-height:28px;
+        padding:4px 9px;
+    }
+
+    body.mobile-typing .spectrum-mobile-slot #spectrum-canvas,
+    body.mobile-typing .spectrum-mobile-slot .meter-scale {
+        display:none;
+    }
+}
+
+@media (prefers-reduced-motion:reduce) and (max-width:700px) {
+    .screen,
+    .spectrum-mobile-slot > .global-spectrum {
+        transition:none!important;
+    }
+}
