@@ -1055,8 +1055,13 @@ const spectrumMobileSlot = document.querySelector('.spectrum-mobile-slot');
 const spectrumControlRow = document.querySelector('.control-row');
 const spectrumMobileLayout = matchMedia('(max-width: 700px)');
 function placeSpectrum() {
-    if (spectrumMobileLayout.matches) spectrumMobileSlot.appendChild(spectrumModule);
-    else spectrumControlRow.insertBefore(spectrumModule, document.querySelector('.readout-block'));
+    const spectrumToggle = document.getElementById('spectrum-mobile-toggle');
+    if (spectrumMobileLayout.matches) {
+        spectrumMobileSlot.appendChild(spectrumModule);
+        if (spectrumToggle) spectrumMobileSlot.appendChild(spectrumToggle);
+    } else {
+        spectrumControlRow.insertBefore(spectrumModule, document.querySelector('.readout-block'));
+    }
 }
 spectrumMobileLayout.addEventListener('change', placeSpectrum);
 placeSpectrum();
@@ -1152,89 +1157,120 @@ cursorCapability.addEventListener('change', disableCursor);
 cursorReducedMotion.addEventListener('change', clearCursorEffects);
 
 
-// ===== MOBILE INTERACTION PASS v7 =====
+// ===== MOBILE INTERACTION PASS v11 =====
 (() => {
     const mobileMq = matchMedia('(max-width: 700px)');
     const root = document.documentElement;
     const body = document.body;
     const indexInput = document.getElementById('index-query');
+    const indexStation = document.getElementById('station-index');
     const screenEl = document.querySelector('.screen');
     const spectrumToggle = document.getElementById('spectrum-mobile-toggle');
 
     let stableHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
-    let typing = false;
 
-    function setStableHeight(force = false) {
+    function captureStableHeight(force = false) {
+        if (!mobileMq.matches) return;
         const current = Math.max(window.innerHeight, document.documentElement.clientHeight);
-        // Do not overwrite the stable height with the keyboard-reduced viewport.
-        if (force || !typing || current > stableHeight * 0.88) {
+        const keyboardVisible = body.classList.contains('mobile-keyboard-visible');
+
+        if (force || !keyboardVisible) {
             stableHeight = current;
             root.style.setProperty('--stable-app-height', `${stableHeight}px`);
         }
     }
 
-    function updateVisualViewport() {
-        if (!window.visualViewport) return;
+    function updateKeyboardState() {
+        if (!mobileMq.matches || !window.visualViewport) {
+            body.classList.remove('mobile-keyboard-visible', 'mobile-typing');
+            return;
+        }
+
         const vv = window.visualViewport;
         const covered = Math.max(0, stableHeight - vv.height - vv.offsetTop);
-        const keyboardVisible = mobileMq.matches && typing && covered > 80;
+        const keyboardVisible = covered > 90;
 
         root.style.setProperty('--keyboard-height', `${covered}px`);
-        root.style.setProperty('--keyboard-top', `${Math.max(180, vv.height + vv.offsetTop)}px`);
         body.classList.toggle('mobile-keyboard-visible', keyboardVisible);
+
+        // Typing mode follows the actual keyboard state, not focus alone.
+        if (keyboardVisible && document.activeElement === indexInput) {
+            body.classList.add('mobile-typing');
+        } else if (!keyboardVisible) {
+            body.classList.remove('mobile-typing');
+            root.style.removeProperty('--keyboard-height');
+        }
     }
 
     function enterTypingMode() {
         if (!mobileMq.matches) return;
-        typing = true;
         body.classList.add('mobile-typing');
-        updateVisualViewport();
 
-        // Keep the paper near the upper visible area without letting the browser
-        // yank the whole receiver upward.
-        requestAnimationFrame(() => {
-            const paper = document.getElementById('index-paper');
-            if (paper) paper.scrollIntoView({ block:'start', behavior:'auto' });
-        });
+        // Important: do NOT call scrollIntoView here.
+        // That was what could pan the whole receiver upward on mobile browsers.
+        if (indexStation) {
+            const queryLine = indexInput?.closest('.query-line');
+            if (queryLine) {
+                const stationRect = indexStation.getBoundingClientRect();
+                const queryRect = queryLine.getBoundingClientRect();
+                const desiredTop = stationRect.top + 70;
+                const delta = queryRect.top - desiredTop;
+                if (delta > 0) indexStation.scrollTop += delta;
+            }
+        }
+
+        setTimeout(updateKeyboardState, 60);
     }
 
     function leaveTypingMode() {
-        typing = false;
         body.classList.remove('mobile-typing', 'mobile-keyboard-visible');
         root.style.removeProperty('--keyboard-height');
-        root.style.removeProperty('--keyboard-top');
-        setStableHeight(true);
+        captureStableHeight(true);
     }
 
     if (indexInput) {
         indexInput.addEventListener('focus', enterTypingMode);
+
         indexInput.addEventListener('blur', () => {
-            // Let a tap on an index result complete before restoring the body.
-            setTimeout(leaveTypingMode, 120);
+            setTimeout(leaveTypingMode, 80);
+        });
+
+        // "Go / 前往" should finish the input and close the mobile keyboard.
+        indexInput.addEventListener('keydown', event => {
+            if (mobileMq.matches && event.key === 'Enter') {
+                requestAnimationFrame(() => indexInput.blur());
+            }
         });
     }
 
     if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', updateVisualViewport);
-        window.visualViewport.addEventListener('scroll', updateVisualViewport);
+        window.visualViewport.addEventListener('resize', updateKeyboardState);
+        window.visualViewport.addEventListener('scroll', updateKeyboardState);
     }
 
-    window.addEventListener('orientationchange', () => {
-        setTimeout(() => setStableHeight(true), 250);
-    });
-
     window.addEventListener('resize', () => {
-        if (!typing) setStableHeight();
+        if (!body.classList.contains('mobile-keyboard-visible')) {
+            captureStableHeight();
+        }
     });
 
-    setStableHeight(true);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            leaveTypingMode();
+            captureStableHeight(true);
+        }, 250);
+    });
+
+    captureStableHeight(true);
 
     if (spectrumToggle && screenEl) {
-        spectrumToggle.addEventListener('click', () => {
+        spectrumToggle.addEventListener('click', event => {
             if (!mobileMq.matches) return;
+            event.preventDefault();
             const collapsed = screenEl.classList.toggle('spectrum-collapsed');
             spectrumToggle.setAttribute('aria-expanded', String(!collapsed));
             spectrumToggle.setAttribute('aria-label', collapsed ? '展开频谱' : '收起频谱');
+            requestAnimationFrame(() => spectrumToggle.blur());
         });
 
         mobileMq.addEventListener('change', event => {
@@ -1244,8 +1280,73 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
                 spectrumToggle.setAttribute('aria-label', '收起频谱');
                 leaveTypingMode();
             } else {
-                setStableHeight(true);
+                captureStableHeight(true);
             }
         });
     }
+})();
+
+
+// ===== MOBILE TOUCH POLISH v12 =====
+(() => {
+    const coarseMq = matchMedia('(hover: none) and (pointer: coarse)');
+    const indexQuery = document.getElementById('index-query');
+    const cover = document.querySelector('.release-cover');
+    const cat = document.querySelector('.cat-easter');
+
+    function fitIndexQuery() {
+        if (!indexQuery) return;
+
+        if (!coarseMq.matches) {
+            indexQuery.style.height = '';
+            return;
+        }
+
+        // Let the textarea wrap into the otherwise unused paper area.
+        indexQuery.style.height = 'auto';
+        const lineHeight = parseFloat(getComputedStyle(indexQuery).lineHeight) || 20;
+        const maxHeight = lineHeight * 3.6;
+        indexQuery.style.height = `${Math.min(indexQuery.scrollHeight, maxHeight)}px`;
+    }
+
+    if (indexQuery) {
+        indexQuery.addEventListener('input', fitIndexQuery);
+        indexQuery.addEventListener('focus', fitIndexQuery);
+        fitIndexQuery();
+    }
+
+    if (cover) {
+        let coverTimer = 0;
+        cover.addEventListener('pointerup', event => {
+            if (!coarseMq.matches || event.pointerType === 'mouse') return;
+            clearTimeout(coverTimer);
+            cover.classList.remove('touch-active');
+            void cover.offsetWidth;
+            cover.classList.add('touch-active');
+            coverTimer = setTimeout(() => cover.classList.remove('touch-active'), 460);
+        });
+        cover.addEventListener('pointercancel', () => cover.classList.remove('touch-active'));
+    }
+
+    if (cat) {
+        cat.addEventListener('click', event => {
+            if (!coarseMq.matches) return;
+            event.preventDefault();
+            cat.classList.toggle('touch-active');
+        });
+
+        // Tapping elsewhere closes the cat message.
+        document.addEventListener('pointerdown', event => {
+            if (!coarseMq.matches || !cat.classList.contains('touch-active')) return;
+            if (!cat.contains(event.target)) cat.classList.remove('touch-active');
+        });
+    }
+
+    coarseMq.addEventListener('change', () => {
+        if (!coarseMq.matches) {
+            cover?.classList.remove('touch-active');
+            cat?.classList.remove('touch-active');
+        }
+        fitIndexQuery();
+    });
 })();

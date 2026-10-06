@@ -1549,19 +1549,43 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     }
 
     .screen {
-        transition:grid-template-rows .28s ease;
+        transition:grid-template-rows .28s cubic-bezier(.22,.61,.36,1);
     }
 
     .spectrum-mobile-slot {
         position:relative;
         z-index:6;
         overflow:visible;
+        background:#15191a;
+        transition:height .28s cubic-bezier(.22,.61,.36,1);
     }
 
+    /*
+      The analyser moves as one rigid module. Nothing inside it is hidden or
+      resized independently, so the graph, scale and black faceplate stay locked
+      together during the slide.
+    */
     .spectrum-mobile-slot > .global-spectrum {
         position:relative;
-        overflow:visible;
-        transition:height .28s ease, padding .28s ease, border-width .28s ease;
+        overflow:hidden;
+        transform:translateY(0);
+        will-change:transform;
+        transition:transform .28s cubic-bezier(.22,.61,.36,1);
+    }
+
+    .spectrum-mobile-slot::after {
+        content:"SPECTRUM";
+        position:absolute;
+        left:10px;
+        top:0;
+        height:26px;
+        line-height:26px;
+        color:#8f9798;
+        font:700 .42rem/26px "Space Mono",monospace;
+        letter-spacing:.13em;
+        opacity:0;
+        pointer-events:none;
+        transition:opacity .14s ease .05s;
     }
 
     .spectrum-mobile-toggle {
@@ -1570,61 +1594,51 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
         position:absolute;
         z-index:20;
         left:50%;
-        bottom:-17px;
-        width:58px;
-        height:18px;
+        bottom:-13px;
+        width:36px;
+        height:14px;
+        min-width:0;
+        min-height:0;
         padding:0;
         transform:translateX(-50%);
-        border:1px solid #33251a;
+        border:1px solid #4a3324;
         border-top:0;
-        border-radius:0 0 29px 29px;
-        background:linear-gradient(180deg,#7d593e,#563b2b);
-        color:#f0e4d0;
-        box-shadow:0 2px 3px rgba(35,22,14,.28), inset 0 -1px rgba(0,0,0,.28);
-        font:700 15px/1 "Space Mono",monospace;
+        border-radius:0 0 14px 14px;
+        background:linear-gradient(180deg,#8a6246,#674733);
+        color:#f2e7d5;
+        box-shadow:0 1px 2px rgba(35,22,14,.24), inset 0 -1px rgba(0,0,0,.22);
+        font:700 9px/1 "Space Mono",monospace;
         letter-spacing:0;
         cursor:pointer;
         touch-action:manipulation;
+        user-select:none;
+        -webkit-user-select:none;
+        -webkit-touch-callout:none;
+        -webkit-tap-highlight-color:transparent;
     }
 
     .spectrum-mobile-toggle:active {
         transform:translateX(-50%) translateY(1px);
     }
 
+    .spectrum-mobile-toggle:focus,
+    .spectrum-mobile-toggle:focus-visible {
+        outline:none!important;
+        box-shadow:0 1px 2px rgba(35,22,14,.24), inset 0 -1px rgba(0,0,0,.22)!important;
+    }
+
     .spectrum-toggle-down { display:none; }
 
     .screen.spectrum-collapsed {
-        grid-template-rows:34px minmax(0,1fr);
+        grid-template-rows:28px minmax(0,1fr);
     }
 
     .screen.spectrum-collapsed .spectrum-mobile-slot > .global-spectrum {
-        height:28px;
-        min-height:28px;
-        padding:4px 9px;
-        border-bottom-width:2px;
+        transform:translateY(-116px);
     }
 
-    .screen.spectrum-collapsed .global-spectrum #spectrum-canvas,
-    .screen.spectrum-collapsed .global-spectrum .meter-scale,
-    .screen.spectrum-collapsed .global-spectrum .spectrum-header i {
-        display:none;
-    }
-
-    .screen.spectrum-collapsed .global-spectrum .spectrum-header {
-        height:20px;
-        margin:0;
-        align-items:center;
-        opacity:.78;
-    }
-
-    .screen.spectrum-collapsed .global-spectrum .spectrum-header > span {
-        font-size:0;
-    }
-
-    .screen.spectrum-collapsed .global-spectrum .spectrum-header > span::before {
-        content:"SPECTRUM";
-        font:700 .42rem/20px "Space Mono",monospace;
-        letter-spacing:.13em;
+    .screen.spectrum-collapsed .spectrum-mobile-slot::after {
+        opacity:.82;
     }
 
     .screen.spectrum-collapsed .spectrum-toggle-up { display:none; }
@@ -1649,69 +1663,39 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     }
 
     /*
-      While the OS keyboard is present, keep the useful "paper" in the upper
-      visible portion and remove the decorative web keyboard that would sit
-      behind the real keyboard anyway.
+      Typing mode must never delete or hide parts of the receiver.
+      The phone keyboard overlays the lower area; the INDEX station itself
+      remains scrollable, with the complete typewriter still in the document.
     */
     body.mobile-typing .index-station {
-        padding-top:24px;
-        padding-bottom:24px;
         overflow-y:auto;
         overscroll-behavior:contain;
-    }
-
-    body.mobile-typing .index-station .station-tag {
-        margin-bottom:8px;
-    }
-
-    body.mobile-typing .index-station .archive-kicker {
-        margin-bottom:7px;
+        scroll-padding-top:18px;
+        scroll-padding-bottom:24px;
     }
 
     body.mobile-typing .typewriter-search {
-        width:100%;
-        margin-top:0;
-    }
-
-    body.mobile-typing .paper-assembly {
-        width:94%;
-        margin-bottom:0;
+        width:min(100%,820px);
     }
 
     body.mobile-typing .typewriter-paper {
-        min-height:150px;
-        max-height:calc(var(--keyboard-top, 62vh) - 120px);
-        padding:16px 13px 18px;
-        overflow-y:auto;
+        max-height:none;
+        overflow:visible;
     }
 
     body.mobile-typing .typewriter-body {
-        display:none;
+        display:block;
+        visibility:visible;
     }
 
     body.mobile-typing .tuner-panel {
-        visibility:hidden;
-        pointer-events:none;
+        visibility:visible;
+        pointer-events:auto;
     }
 
     body.mobile-typing .spectrum-mobile-slot {
-        opacity:.28;
-        pointer-events:none;
-    }
-
-    body.mobile-typing .screen {
-        grid-template-rows:34px minmax(0,1fr);
-    }
-
-    body.mobile-typing .spectrum-mobile-slot > .global-spectrum {
-        height:28px;
-        min-height:28px;
-        padding:4px 9px;
-    }
-
-    body.mobile-typing .spectrum-mobile-slot #spectrum-canvas,
-    body.mobile-typing .spectrum-mobile-slot .meter-scale {
-        display:none;
+        opacity:1;
+        pointer-events:auto;
     }
 }
 
@@ -1719,5 +1703,157 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     .screen,
     .spectrum-mobile-slot > .global-spectrum {
         transition:none!important;
+    }
+}
+
+
+/* ===== MOBILE INDEX STABILITY v11 ===== */
+@media (max-width:700px) {
+    #index-query,
+    #index-query:focus,
+    #index-query:focus-visible {
+        outline:none!important;
+        box-shadow:none!important;
+        -webkit-tap-highlight-color:transparent;
+    }
+
+    /* Search output grows inside the station's own scroll area, never the page. */
+    #station-index {
+        overflow-y:auto;
+        overscroll-behavior:contain;
+        min-height:0;
+    }
+
+    #station-index .typewriter-search {
+        flex:0 0 auto;
+        min-height:0;
+    }
+
+    /* Keep the machine above the station background after long search output. */
+    #station-index .paper-assembly,
+    #station-index .typewriter-body {
+        position:relative;
+    }
+
+    /* The receiver stays pinned while the OS keyboard changes visualViewport. */
+    body.mobile-keyboard-visible .radio-unit {
+        top:7px;
+        bottom:auto;
+        height:calc(var(--stable-app-height, 100dvh) - 14px);
+        max-height:calc(var(--stable-app-height, 100dvh) - 14px);
+    }
+}
+
+
+/* ===== MOBILE TOUCH POLISH v12 ===== */
+
+/* Keep the INDEX entry visually like a typewriter line on desktop. */
+#index-query {
+    resize:none;
+    overflow:hidden;
+    white-space:nowrap;
+    line-height:1.5;
+    min-height:1.5em;
+    font-family:inherit;
+}
+
+/* Touch devices should never show the browser's blue tap rectangle on the
+   receiver's own controls. Desktop keyboard focus styling is left untouched. */
+@media (hover:none) and (pointer:coarse) {
+    button,
+    a,
+    [role="button"],
+    [role="switch"],
+    .release-cover,
+    .visual-window,
+    .image-slot,
+    .cat-easter,
+    .story-switch,
+    .type-key {
+        -webkit-tap-highlight-color:transparent!important;
+        -webkit-touch-callout:none;
+    }
+
+    button,
+    [role="button"],
+    [role="switch"],
+    .release-cover,
+    .visual-window,
+    .image-slot,
+    .cat-easter,
+    .story-switch,
+    .type-key {
+        -webkit-user-select:none;
+        user-select:none;
+    }
+
+    button:focus,
+    button:focus-visible,
+    a:focus,
+    a:focus-visible,
+    [role="button"]:focus,
+    [role="button"]:focus-visible,
+    [role="switch"]:focus,
+    [role="switch"]:focus-visible,
+    .visual-window:focus,
+    .visual-window:focus-visible,
+    .cat-easter:focus,
+    .cat-easter:focus-visible {
+        outline:none!important;
+        box-shadow:none;
+    }
+
+    /* The phone has room on the paper: let long queries wrap naturally. */
+    #index-query {
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+        word-break:break-word;
+        overflow:hidden;
+        min-height:1.5em;
+        max-height:5.2em;
+        line-height:1.45;
+    }
+
+    .query-line {
+        align-items:flex-start;
+    }
+
+    /* Mobile tap motion for the release artwork. */
+    .release-cover.touch-active {
+        transform:translateY(-4px) rotate(.7deg);
+        box-shadow:14px 18px 0 rgba(45,31,21,.14),
+                   0 0 12px rgba(210,190,150,.18),
+                   inset 0 0 0 7px rgba(245,229,196,.08),
+                   inset 0 0 38px rgba(0,0,0,.36);
+    }
+    .release-cover.touch-active::after {
+        transform:rotate(22deg);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.08),
+                   0 0 7px rgba(226,213,183,.16);
+    }
+
+    /* Mobile cat: tap once to reveal, tap again to close. */
+    .cat-easter {
+        touch-action:manipulation;
+    }
+
+    .cat-easter::after {
+        display:block;
+    }
+
+    .cat-easter.touch-active::after {
+        width:min(210px,58vw);
+        opacity:1;
+        transform:translateX(0);
+    }
+
+    .cat-easter.touch-active .cat-tail {
+        animation:cat-tail-wag 1.2s ease-in-out infinite;
+    }
+
+    .cat-easter.touch-active .cat-eyes,
+    .cat-easter.touch-active .cat-eyes::after {
+        opacity:.85;
+        box-shadow:0 0 8px rgba(198,154,85,.35);
     }
 }
