@@ -1518,10 +1518,9 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
 }
 
 
-/* ===== MOBILE INTERACTION PASS v7 =====
-   - collapsible spectrum
-   - software keyboard overlay/fallback handling
-   - cleaner typewriter input focus
+/* ===== MOBILE INTERACTION PASS v8 =====
+   Smaller spectrum tab, no blue tap highlight, and keyboard-safe INDEX
+   without hiding the physical typewriter.
 */
 .spectrum-mobile-toggle { display:none; }
 
@@ -1530,17 +1529,12 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
 #index-query:focus-visible {
     -webkit-appearance:none;
     appearance:none;
-    outline:none;
-    box-shadow:none;
-    background:transparent;
+    outline:none!important;
+    box-shadow:none!important;
+    background:transparent!important;
 }
 
 @media (max-width:700px) {
-    /*
-      Keep the receiver tied to a stable viewport height. When a phone keyboard
-      shrinks visualViewport, the receiver stays full-height behind it instead
-      of being compressed into the remaining strip.
-    */
     .radio-unit {
         top:7px;
         bottom:auto;
@@ -1549,7 +1543,7 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     }
 
     .screen {
-        transition:grid-template-rows .28s ease;
+        transition:grid-template-rows .24s ease;
     }
 
     .spectrum-mobile-slot {
@@ -1561,45 +1555,56 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     .spectrum-mobile-slot > .global-spectrum {
         position:relative;
         overflow:visible;
-        transition:height .28s ease, padding .28s ease, border-width .28s ease;
+        transition:height .24s ease, padding .24s ease, border-width .24s ease;
     }
 
+    /* Small right-side pull tab: avoids covering 500 / 1k scale labels. */
     .spectrum-mobile-toggle {
         display:grid;
         place-items:center;
         position:absolute;
         z-index:20;
-        left:50%;
-        bottom:-17px;
-        width:58px;
-        height:18px;
+        left:auto;
+        right:10px;
+        bottom:-12px;
+        width:30px;
+        height:13px;
+        min-width:0;
+        min-height:0;
         padding:0;
-        transform:translateX(-50%);
-        border:1px solid #33251a;
+        transform:none;
+        border:1px solid #4a3324;
         border-top:0;
-        border-radius:0 0 29px 29px;
-        background:linear-gradient(180deg,#7d593e,#563b2b);
-        color:#f0e4d0;
-        box-shadow:0 2px 3px rgba(35,22,14,.28), inset 0 -1px rgba(0,0,0,.28);
-        font:700 15px/1 "Space Mono",monospace;
-        letter-spacing:0;
+        border-radius:0 0 12px 12px;
+        background:linear-gradient(180deg,#8a6246,#644531);
+        color:#f1e6d4;
+        box-shadow:0 1px 2px rgba(35,22,14,.22), inset 0 -1px rgba(0,0,0,.22);
+        font:700 9px/1 "Space Mono",monospace;
         cursor:pointer;
         touch-action:manipulation;
+        -webkit-tap-highlight-color:transparent;
+        user-select:none;
     }
 
     .spectrum-mobile-toggle:active {
-        transform:translateX(-50%) translateY(1px);
+        transform:translateY(1px);
+    }
+
+    .spectrum-mobile-toggle:focus,
+    .spectrum-mobile-toggle:focus-visible {
+        outline:none!important;
+        box-shadow:0 1px 2px rgba(35,22,14,.22), inset 0 -1px rgba(0,0,0,.22)!important;
     }
 
     .spectrum-toggle-down { display:none; }
 
     .screen.spectrum-collapsed {
-        grid-template-rows:34px minmax(0,1fr);
+        grid-template-rows:32px minmax(0,1fr);
     }
 
     .screen.spectrum-collapsed .spectrum-mobile-slot > .global-spectrum {
-        height:28px;
-        min-height:28px;
+        height:27px;
+        min-height:27px;
         padding:4px 9px;
         border-bottom-width:2px;
     }
@@ -1611,7 +1616,7 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     }
 
     .screen.spectrum-collapsed .global-spectrum .spectrum-header {
-        height:20px;
+        height:18px;
         margin:0;
         align-items:center;
         opacity:.78;
@@ -1623,39 +1628,36 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
 
     .screen.spectrum-collapsed .global-spectrum .spectrum-header > span::before {
         content:"SPECTRUM";
-        font:700 .42rem/20px "Space Mono",monospace;
+        font:700 .42rem/18px "Space Mono",monospace;
         letter-spacing:.13em;
     }
 
     .screen.spectrum-collapsed .spectrum-toggle-up { display:none; }
     .screen.spectrum-collapsed .spectrum-toggle-down { display:inline; }
 
-    /* The paper stays visually like paper when the real phone keyboard opens. */
     #index-query {
         border:0;
         border-bottom:1px solid #85745c66;
         border-radius:0;
         padding:3px 0;
         caret-color:#6d3f31;
+        -webkit-tap-highlight-color:transparent;
     }
 
     #index-query:focus,
     #index-query:focus-visible {
         border:0;
         border-bottom:1px solid #85745c88;
-        outline:0!important;
-        box-shadow:none!important;
-        background:transparent!important;
     }
 
     /*
-      While the OS keyboard is present, keep the useful "paper" in the upper
-      visible portion and remove the decorative web keyboard that would sit
-      behind the real keyboard anyway.
+      Keep the complete typewriter in the document.
+      The OS keyboard may cover the lower part, but the machine itself is never
+      removed, so closing the keyboard cannot leave a blank/stuck station.
     */
     body.mobile-typing .index-station {
-        padding-top:24px;
-        padding-bottom:24px;
+        padding-top:22px;
+        padding-bottom:40px;
         overflow-y:auto;
         overscroll-behavior:contain;
     }
@@ -1674,44 +1676,32 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     }
 
     body.mobile-typing .paper-assembly {
-        width:94%;
+        width:92%;
         margin-bottom:0;
     }
 
     body.mobile-typing .typewriter-paper {
-        min-height:150px;
-        max-height:calc(var(--keyboard-top, 62vh) - 120px);
-        padding:16px 13px 18px;
-        overflow-y:auto;
+        min-height:145px;
+        padding:16px 13px 17px;
     }
 
     body.mobile-typing .typewriter-body {
-        display:none;
+        display:block;
+        padding-top:10px;
+        padding-bottom:8px;
     }
 
-    body.mobile-typing .tuner-panel {
-        visibility:hidden;
-        pointer-events:none;
+    body.mobile-typing .typewriter-keyboard {
+        padding-block:5px;
     }
 
-    body.mobile-typing .spectrum-mobile-slot {
-        opacity:.28;
-        pointer-events:none;
+    body.mobile-typing .key-row {
+        margin-block:4px;
     }
 
-    body.mobile-typing .screen {
-        grid-template-rows:34px minmax(0,1fr);
-    }
-
-    body.mobile-typing .spectrum-mobile-slot > .global-spectrum {
-        height:28px;
-        min-height:28px;
-        padding:4px 9px;
-    }
-
-    body.mobile-typing .spectrum-mobile-slot #spectrum-canvas,
-    body.mobile-typing .spectrum-mobile-slot .meter-scale {
-        display:none;
+    body.mobile-typing .typewriter-badge {
+        margin-top:7px;
+        padding-block:3px;
     }
 }
 

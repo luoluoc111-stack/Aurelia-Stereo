@@ -1152,7 +1152,7 @@ cursorCapability.addEventListener('change', disableCursor);
 cursorReducedMotion.addEventListener('change', clearCursorEffects);
 
 
-// ===== MOBILE INTERACTION PASS v7 =====
+// ===== MOBILE INTERACTION PASS v8 =====
 (() => {
     const mobileMq = matchMedia('(max-width: 700px)');
     const root = document.documentElement;
@@ -1162,44 +1162,54 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
     const spectrumToggle = document.getElementById('spectrum-mobile-toggle');
 
     let stableHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
-    let typing = false;
 
     function setStableHeight(force = false) {
         const current = Math.max(window.innerHeight, document.documentElement.clientHeight);
-        // Do not overwrite the stable height with the keyboard-reduced viewport.
-        if (force || !typing || current > stableHeight * 0.88) {
+        const keyboardOpen = body.classList.contains('mobile-keyboard-visible');
+        if (force || !keyboardOpen || current > stableHeight * 0.88) {
             stableHeight = current;
             root.style.setProperty('--stable-app-height', `${stableHeight}px`);
         }
     }
 
-    function updateVisualViewport() {
-        if (!window.visualViewport) return;
+    function updateKeyboardState() {
+        if (!mobileMq.matches || !window.visualViewport) {
+            body.classList.remove('mobile-keyboard-visible');
+            return;
+        }
+
         const vv = window.visualViewport;
         const covered = Math.max(0, stableHeight - vv.height - vv.offsetTop);
-        const keyboardVisible = mobileMq.matches && typing && covered > 80;
+        const visible = covered > 90;
 
         root.style.setProperty('--keyboard-height', `${covered}px`);
         root.style.setProperty('--keyboard-top', `${Math.max(180, vv.height + vv.offsetTop)}px`);
-        body.classList.toggle('mobile-keyboard-visible', keyboardVisible);
+        body.classList.toggle('mobile-keyboard-visible', visible);
+
+        /*
+          Some mobile browsers keep the input focused after the keyboard is
+          dismissed. In that case restore normal layout from viewport state,
+          not from blur alone.
+        */
+        if (!visible && document.activeElement !== indexInput) {
+            body.classList.remove('mobile-typing');
+        }
+        if (!visible && document.activeElement === indexInput) {
+            body.classList.remove('mobile-typing');
+        }
     }
 
     function enterTypingMode() {
         if (!mobileMq.matches) return;
-        typing = true;
         body.classList.add('mobile-typing');
-        updateVisualViewport();
-
-        // Keep the paper near the upper visible area without letting the browser
-        // yank the whole receiver upward.
         requestAnimationFrame(() => {
-            const paper = document.getElementById('index-paper');
-            if (paper) paper.scrollIntoView({ block:'start', behavior:'auto' });
+            const machine = document.getElementById('typewriter-machine');
+            if (machine) machine.scrollIntoView({ block:'start', behavior:'auto' });
         });
+        setTimeout(updateKeyboardState, 60);
     }
 
     function leaveTypingMode() {
-        typing = false;
         body.classList.remove('mobile-typing', 'mobile-keyboard-visible');
         root.style.removeProperty('--keyboard-height');
         root.style.removeProperty('--keyboard-top');
@@ -1208,30 +1218,43 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
 
     if (indexInput) {
         indexInput.addEventListener('focus', enterTypingMode);
-        indexInput.addEventListener('blur', () => {
-            // Let a tap on an index result complete before restoring the body.
-            setTimeout(leaveTypingMode, 120);
+        indexInput.addEventListener('blur', () => setTimeout(leaveTypingMode, 80));
+
+        // The phone keyboard's "Go/前往" key should actually close the keyboard.
+        indexInput.addEventListener('keydown', event => {
+            if (mobileMq.matches && event.key === 'Enter') {
+                requestAnimationFrame(() => indexInput.blur());
+            }
         });
     }
 
     if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', updateVisualViewport);
-        window.visualViewport.addEventListener('scroll', updateVisualViewport);
+        window.visualViewport.addEventListener('resize', () => {
+            updateKeyboardState();
+            if (!body.classList.contains('mobile-keyboard-visible')) setStableHeight();
+        });
+        window.visualViewport.addEventListener('scroll', updateKeyboardState);
     }
 
     window.addEventListener('orientationchange', () => {
-        setTimeout(() => setStableHeight(true), 250);
+        setTimeout(() => {
+            leaveTypingMode();
+            setStableHeight(true);
+        }, 250);
     });
 
     window.addEventListener('resize', () => {
-        if (!typing) setStableHeight();
+        if (!body.classList.contains('mobile-keyboard-visible')) setStableHeight();
     });
 
     setStableHeight(true);
 
     if (spectrumToggle && screenEl) {
-        spectrumToggle.addEventListener('click', () => {
+        spectrumToggle.addEventListener('click', event => {
             if (!mobileMq.matches) return;
+            event.preventDefault();
+            spectrumToggle.blur();
+
             const collapsed = screenEl.classList.toggle('spectrum-collapsed');
             spectrumToggle.setAttribute('aria-expanded', String(!collapsed));
             spectrumToggle.setAttribute('aria-label', collapsed ? '展开频谱' : '收起频谱');
