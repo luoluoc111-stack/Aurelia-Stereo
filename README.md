@@ -63,14 +63,14 @@ The music in this project is free to listen to and share.
 If you would like to use it in your own work, please credit **Charlie**
 and link back to this repository when possible.
 
-Please do not claim the music as your own original work.
+Please do not claim the music as your own original work or use it commercially.
 
 本项目中的音乐可以自由试听与分享。
 
 如需用于自己的作品，欢迎使用；希望注明作者 **Charlie**，
 并在方便的情况下附上本仓库链接。
 
-请不要将音乐作为自己的原创作品进行署名。
+请不要将音乐作为自己的原创作品进行署名或作商业用途。
 
 
 ## License / 许可证
