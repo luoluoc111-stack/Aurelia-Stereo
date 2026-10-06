@@ -1954,3 +1954,34 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     line-height:1.86;
     letter-spacing:.015em;
 }
+
+
+/* ===== MOBILE NARROW-SCREEN + KEYBOARD STABILITY v17 ===== */
+@media (max-width:700px) {
+    /* Keep the cat sentence inside narrow phone screens. The font/spacing
+       compresses slightly only when the available width is genuinely small. */
+    .cat-easter.touch-active::after {
+        right:80px;
+        width:min(210px, calc(100vw - 132px));
+        max-width:calc(100vw - 132px);
+        font-size:clamp(8.5px,2.75vw,11px);
+        letter-spacing:clamp(.07em,.28vw,.14em);
+    }
+
+    /* While the software keyboard is open, freeze the receiver at its
+       pre-keyboard geometry. The keyboard may cover the lower controls, but
+       it must not squeeze or lift the receiver itself. */
+    body.mobile-typing .radio-unit,
+    body.mobile-keyboard-visible .radio-unit {
+        top:7px;
+        bottom:auto;
+        height:calc(var(--stable-app-height, 100dvh) - 14px);
+        max-height:none;
+    }
+
+    /* Do not create a temporary spacer/panel below the INDEX content. */
+    body.mobile-typing #station-index {
+        padding-bottom:56px;
+        scroll-padding-bottom:0;
+    }
+}
