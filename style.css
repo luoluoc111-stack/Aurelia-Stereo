@@ -1932,3 +1932,22 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
     line-height:1.86;
     letter-spacing:.015em;
 }
+
+
+/* MOBILE KEYBOARD PAINT GUARD
+   Android can reveal a compositor frame before the page finishes resizing when
+   the software keyboard closes. Give both root layers the receiver's wood
+   colour so that transient revealed space never flashes browser-white. */
+html {
+    background-color:#6b4322;
+}
+@media (max-width:700px) {
+    html,
+    body {
+        background-color:#6b4322;
+    }
+    body.keyboard-lock,
+    body.keyboard-restoring {
+        background-color:#6b4322;
+    }
+}

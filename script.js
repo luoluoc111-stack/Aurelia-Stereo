@@ -1212,22 +1212,55 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
         if (!body.classList.contains('keyboard-lock')) return;
         clearTimeout(restoreTimer);
 
-        const attempt = (tries = 0) => {
-            if (canUnlock() || tries >= 8) {
-                body.classList.remove('keyboard-lock');
-                root.style.removeProperty('--keyboard-locked-height');
+        let stableFrames = 0;
+        let lastVisibleHeight = -1;
 
-                // Wait until the keyboard animation has really finished before
-                // accepting a new normal viewport height.
-                setTimeout(() => rememberNormalHeight(true), 120);
-                window.scrollTo(0, lockedScrollY);
-                keyboardSeen = false;
-                return;
-            }
-            restoreTimer = setTimeout(() => attempt(tries + 1), 80);
+        const finishUnlock = () => {
+            // Record the restored viewport first, while the old locked frame is
+            // still painted. Only then release the fixed body on the next frame.
+            rememberNormalHeight(true);
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    body.classList.remove('keyboard-lock');
+                    root.style.removeProperty('--keyboard-locked-height');
+                    window.scrollTo(0, lockedScrollY);
+                    keyboardSeen = false;
+                });
+            });
         };
 
-        restoreTimer = setTimeout(() => attempt(0), 60);
+        const attempt = (tries = 0) => {
+            const vv = window.visualViewport;
+            const visibleHeight = vv ? vv.height : viewportHeight();
+            const restored = canUnlock();
+
+            if (restored) {
+                if (Math.abs(visibleHeight - lastVisibleHeight) < 2) stableFrames++;
+                else stableFrames = 0;
+                lastVisibleHeight = visibleHeight;
+
+                // Require several stable samples after the keyboard animation
+                // has visually finished. This avoids exposing the browser's
+                // blank viewport for a frame while Android is still resizing.
+                if (stableFrames >= 2) {
+                    finishUnlock();
+                    return;
+                }
+            } else {
+                stableFrames = 0;
+                lastVisibleHeight = visibleHeight;
+            }
+
+            if (tries >= 14) {
+                finishUnlock();
+                return;
+            }
+
+            restoreTimer = setTimeout(() => attempt(tries + 1), 45);
+        };
+
+        restoreTimer = setTimeout(() => attempt(0), 80);
     }
 
     function onViewportChange() {
