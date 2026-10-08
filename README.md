@@ -55,7 +55,7 @@ The visual system, station structure, audio behaviour, live spectrum analyser,
 archive search, mobile interactions, release documentation and other interface
 elements have since been extensively redesigned and extended.
 
-## 最近更新
+## Recent Update/最近更新
 
 网站的空白频段页面现已扩展为一个可交互的 SEARCHING 场景。
 
@@ -75,8 +75,6 @@ elements have since been extensively redesigned and extended.
 - 返回有效频道后自动重置场景
 
 SEARCHING 页面直接接入现有调谐系统，不改变原有频道结构。
-
-## Recent Update
 
 The between-stations experience has been expanded into an interactive SEARCHING page.
 
