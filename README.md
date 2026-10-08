@@ -55,6 +55,48 @@ The visual system, station structure, audio behaviour, live spectrum analyser,
 archive search, mobile interactions, release documentation and other interface
 elements have since been extensively redesigned and extended.
 
+## 最近更新
+
+网站的空白频段页面现已扩展为一个可交互的 SEARCHING 场景。
+
+当调谐旋钮停留在有效频道之间时，页面不再只显示简单的无信号提示，而会进入一个带有茶具互动的小场景。页面包含随机搜索文案、信号扫描动画、倒茶、壶盖拖动、茶杯拖动、茶水动画以及隐藏的碰杯彩蛋。
+
+这个页面被设计成频道之间的一小段停顿，在保留复古收音机 / 档案界面视觉语言的同时，加入一些更轻松、更有趣的互动。
+
+### 当前 SEARCHING 交互
+
+- `BETWEEN STATIONS` / `SEARCHING` / `NO SIGNAL` 随机状态
+- 根据调谐方向变化的提示语
+- 搜台指示动画
+- 可交互茶壶与可拖动壶盖
+- 倒茶、茶量变化、蒸汽、溢出与喝茶动画
+- 可拖动茶杯
+- 左上方向隐藏碰杯彩蛋
+- 返回有效频道后自动重置场景
+
+SEARCHING 页面直接接入现有调谐系统，不改变原有频道结构。
+
+## Recent Update
+
+The between-stations experience has been expanded into an interactive SEARCHING page.
+
+When the tuner is positioned between valid stations, the site now displays a small tea scene instead of a simple no-signal placeholder. The page includes randomized searching messages, a signal-search indicator, interactive tea pouring, a draggable lid and cup, liquid animations, and a hidden toast interaction.
+
+This interaction was designed as a small pause between archive stations, keeping the visual language consistent with the receiver-inspired interface while adding a more playful layer to the site.
+
+### Current SEARCHING interactions
+
+- Randomized `BETWEEN STATIONS`, `SEARCHING`, and `NO SIGNAL` states
+- Direction-aware tuning hints
+- Animated searching indicator
+- Interactive teapot and removable lid
+- Tea pouring, filling, steaming, spilling, and drinking animations
+- Draggable teacup
+- Hidden upper-left toast / clink interaction
+- Automatic reset when returning to a valid station
+
+The SEARCHING page is integrated into the existing tuner system and does not replace the main station structure.
+
 
 ## Music Usage / 音乐使用说明
 
