@@ -1548,6 +1548,26 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
         max-height:none;
     }
 
+    /*
+      Keyboard Lab v3 behavior: lock the whole receiver to its pre-keyboard
+      height. The typewriter stays in normal flow; Android may simply cover
+      the lower part of the receiver instead of pushing it upward.
+    */
+    body.keyboard-lock {
+        position:fixed;
+        inset:0;
+        width:100%;
+        height:var(--keyboard-locked-height, var(--stable-app-height, 100dvh));
+        overflow:hidden;
+    }
+
+    body.keyboard-lock .radio-unit {
+        top:7px;
+        bottom:auto;
+        height:calc(var(--keyboard-locked-height, var(--stable-app-height, 100dvh)) - 14px);
+        max-height:none;
+    }
+
     .screen {
         transition:grid-template-rows .28s cubic-bezier(.22,.61,.36,1);
     }
@@ -1662,41 +1682,6 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
         background:transparent!important;
     }
 
-    /*
-      Typing mode must never delete or hide parts of the receiver.
-      The phone keyboard overlays the lower area; the INDEX station itself
-      remains scrollable, with the complete typewriter still in the document.
-    */
-    body.mobile-typing .index-station {
-        overflow-y:auto;
-        overscroll-behavior:contain;
-        scroll-padding-top:18px;
-        scroll-padding-bottom:24px;
-    }
-
-    body.mobile-typing .typewriter-search {
-        width:min(100%,820px);
-    }
-
-    body.mobile-typing .typewriter-paper {
-        max-height:none;
-        overflow:visible;
-    }
-
-    body.mobile-typing .typewriter-body {
-        display:block;
-        visibility:visible;
-    }
-
-    body.mobile-typing .tuner-panel {
-        visibility:visible;
-        pointer-events:auto;
-    }
-
-    body.mobile-typing .spectrum-mobile-slot {
-        opacity:1;
-        pointer-events:auto;
-    }
 }
 
 @media (prefers-reduced-motion:reduce) and (max-width:700px) {
@@ -1735,13 +1720,6 @@ button,a,.knob,.visual-window { position:relative; z-index:3; }
         position:relative;
     }
 
-    /* The receiver stays pinned while the OS keyboard changes visualViewport. */
-    body.mobile-keyboard-visible .radio-unit {
-        top:7px;
-        bottom:auto;
-        height:calc(var(--stable-app-height, 100dvh) - 14px);
-        max-height:calc(var(--stable-app-height, 100dvh) - 14px);
-    }
 }
 
 

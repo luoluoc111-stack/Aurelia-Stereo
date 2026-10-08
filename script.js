@@ -1160,112 +1160,140 @@ cursorCapability.addEventListener('change', disableCursor);
 cursorReducedMotion.addEventListener('change', clearCursorEffects);
 
 
-// ===== MOBILE INTERACTION PASS v11 =====
+// ===== MOBILE KEYBOARD STABILITY (ported from Aurelia Keyboard Lab v3) =====
 (() => {
     const mobileMq = matchMedia('(max-width: 700px)');
     const root = document.documentElement;
     const body = document.body;
     const indexInput = document.getElementById('index-query');
-    const indexStation = document.getElementById('station-index');
     const screenEl = document.querySelector('.screen');
     const spectrumToggle = document.getElementById('spectrum-mobile-toggle');
 
-    let stableHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
+    let lockedHeight = 0;
+    let lockedScrollY = 0;
+    let restoreTimer = 0;
+    let keyboardSeen = false;
+    let autoRecovering = false;
 
-    function captureStableHeight(force = false) {
-        if (!mobileMq.matches) return;
-        const current = Math.max(window.innerHeight, document.documentElement.clientHeight);
-        const keyboardVisible = body.classList.contains('mobile-keyboard-visible');
-
-        if (force || !keyboardVisible) {
-            stableHeight = current;
-            root.style.setProperty('--stable-app-height', `${stableHeight}px`);
-        }
+    function viewportHeight() {
+        return Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
     }
 
-    function updateKeyboardState() {
-        if (!mobileMq.matches || !window.visualViewport) {
-            body.classList.remove('mobile-keyboard-visible', 'mobile-typing');
-            return;
-        }
+    function rememberNormalHeight(force = false) {
+        if (!mobileMq.matches) return;
+        if (!force && body.classList.contains('keyboard-lock')) return;
+        lockedHeight = viewportHeight();
+        root.style.setProperty('--stable-app-height', `${lockedHeight}px`);
+    }
 
+    function lockForKeyboard() {
+        if (!mobileMq.matches || !indexInput || body.classList.contains('keyboard-lock')) return;
+
+        clearTimeout(restoreTimer);
+        keyboardSeen = false;
+        lockedHeight = viewportHeight();
+        lockedScrollY = window.scrollY || 0;
+        root.style.setProperty('--stable-app-height', `${lockedHeight}px`);
+        root.style.setProperty('--keyboard-locked-height', `${lockedHeight}px`);
+        body.classList.add('keyboard-lock');
+
+        // Do not scroll the INDEX station or lift the receiver. The OS keyboard
+        // is allowed to cover the lower part of the unchanged receiver.
+        window.scrollTo(0, lockedScrollY);
+    }
+
+    function canUnlock() {
         const vv = window.visualViewport;
-        const covered = Math.max(0, stableHeight - vv.height - vv.offsetTop);
-        const keyboardVisible = covered > 90;
-
-        root.style.setProperty('--keyboard-height', `${covered}px`);
-        body.classList.toggle('mobile-keyboard-visible', keyboardVisible);
-
-        // Typing mode follows the actual keyboard state, not focus alone.
-        if (keyboardVisible && document.activeElement === indexInput) {
-            body.classList.add('mobile-typing');
-        } else if (!keyboardVisible) {
-            body.classList.remove('mobile-typing');
-            root.style.removeProperty('--keyboard-height');
-        }
+        if (!vv) return true;
+        return vv.height >= lockedHeight - 80;
     }
 
-    function enterTypingMode() {
-        if (!mobileMq.matches) return;
-        body.classList.add('mobile-typing');
+    function unlockAfterKeyboard() {
+        if (!body.classList.contains('keyboard-lock')) return;
+        clearTimeout(restoreTimer);
 
-        // Important: do NOT call scrollIntoView here.
-        // That was what could pan the whole receiver upward on mobile browsers.
-        if (indexStation) {
-            const queryLine = indexInput?.closest('.query-line');
-            if (queryLine) {
-                const stationRect = indexStation.getBoundingClientRect();
-                const queryRect = queryLine.getBoundingClientRect();
-                const desiredTop = stationRect.top + 70;
-                const delta = queryRect.top - desiredTop;
-                if (delta > 0) indexStation.scrollTop += delta;
+        const attempt = (tries = 0) => {
+            if (canUnlock() || tries >= 8) {
+                body.classList.remove('keyboard-lock');
+                root.style.removeProperty('--keyboard-locked-height');
+
+                // Wait until the keyboard animation has really finished before
+                // accepting a new normal viewport height.
+                setTimeout(() => rememberNormalHeight(true), 120);
+                window.scrollTo(0, lockedScrollY);
+                keyboardSeen = false;
+                return;
             }
-        }
+            restoreTimer = setTimeout(() => attempt(tries + 1), 80);
+        };
 
-        setTimeout(updateKeyboardState, 60);
+        restoreTimer = setTimeout(() => attempt(0), 60);
     }
 
-    function leaveTypingMode() {
-        body.classList.remove('mobile-typing', 'mobile-keyboard-visible');
-        root.style.removeProperty('--keyboard-height');
-        captureStableHeight(true);
+    function onViewportChange() {
+        if (!mobileMq.matches) return;
+
+        if (body.classList.contains('keyboard-lock')) {
+            window.scrollTo(0, lockedScrollY);
+
+            const vv = window.visualViewport;
+            const visibleHeight = vv ? vv.height : viewportHeight();
+            const offsetTop = vv ? vv.offsetTop : 0;
+            const covered = Math.max(0, lockedHeight - visibleHeight - offsetTop);
+
+            if (covered > 90) keyboardSeen = true;
+
+            // Some Android browsers dismiss the keyboard without immediately
+            // firing textarea.blur(). When the visual viewport grows back to
+            // its original height, restore the receiver automatically.
+            if (
+                keyboardSeen &&
+                !autoRecovering &&
+                covered < 70 &&
+                visibleHeight >= lockedHeight - 80
+            ) {
+                autoRecovering = true;
+                if (document.activeElement === indexInput) indexInput.blur();
+                else unlockAfterKeyboard();
+                setTimeout(() => { autoRecovering = false; }, 250);
+            }
+        } else {
+            rememberNormalHeight();
+        }
     }
 
     if (indexInput) {
-        indexInput.addEventListener('focus', enterTypingMode);
+        indexInput.addEventListener('focus', lockForKeyboard);
+        indexInput.addEventListener('blur', unlockAfterKeyboard);
 
-        indexInput.addEventListener('blur', () => {
-            setTimeout(leaveTypingMode, 80);
-        });
-
-        // "Go / 前往" should finish the input and close the mobile keyboard.
+        // Enter/Go still closes the software keyboard, but the same restoration
+        // also works when Android dismisses it by tapping outside the keyboard.
         indexInput.addEventListener('keydown', event => {
-            if (mobileMq.matches && event.key === 'Enter') {
+            if (mobileMq.matches && event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
                 requestAnimationFrame(() => indexInput.blur());
             }
         });
     }
 
     if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', updateKeyboardState);
-        window.visualViewport.addEventListener('scroll', updateKeyboardState);
+        window.visualViewport.addEventListener('resize', onViewportChange);
+        window.visualViewport.addEventListener('scroll', onViewportChange);
     }
-
-    window.addEventListener('resize', () => {
-        if (!body.classList.contains('mobile-keyboard-visible')) {
-            captureStableHeight();
-        }
-    });
+    window.addEventListener('resize', onViewportChange);
 
     window.addEventListener('orientationchange', () => {
         setTimeout(() => {
-            leaveTypingMode();
-            captureStableHeight(true);
-        }, 250);
+            if (document.activeElement === indexInput) indexInput.blur();
+            body.classList.remove('keyboard-lock');
+            root.style.removeProperty('--keyboard-locked-height');
+            rememberNormalHeight(true);
+        }, 300);
     });
 
-    captureStableHeight(true);
+    rememberNormalHeight(true);
 
+    // Existing mobile spectrum-collapse interaction is preserved unchanged.
     if (spectrumToggle && screenEl) {
         spectrumToggle.addEventListener('click', event => {
             if (!mobileMq.matches) return;
@@ -1281,9 +1309,10 @@ cursorReducedMotion.addEventListener('change', clearCursorEffects);
                 screenEl.classList.remove('spectrum-collapsed');
                 spectrumToggle.setAttribute('aria-expanded', 'true');
                 spectrumToggle.setAttribute('aria-label', '收起频谱');
-                leaveTypingMode();
+                body.classList.remove('keyboard-lock');
+                root.style.removeProperty('--keyboard-locked-height');
             } else {
-                captureStableHeight(true);
+                rememberNormalHeight(true);
             }
         });
     }
